@@ -1,0 +1,6 @@
+wandb
+aihwkit
+torch
+datasets
+evaluate
+transformers
