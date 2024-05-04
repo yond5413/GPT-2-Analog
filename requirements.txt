@@ -4,3 +4,6 @@ torch
 datasets
 evaluate
 transformers
+matplotlib
+numpy
+mpl-scatter-density
