@@ -84,6 +84,7 @@ def create_model(ARGS,rpu_config,num_classes):
         model = convert_to_analog(model, rpu_config)
         model.remap_analog_weights()
     if cuda.is_compiled():
+        print("cuda compiled")
         model.cuda()
     print(model)
 
