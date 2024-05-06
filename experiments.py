@@ -1,9 +1,8 @@
 import os
 from datetime import datetime
 from argparse import ArgumentParser
-from SQuAD_dataset import load_squad
-from RACE_dataset  import load_race
-from TLDR_dataset  import load_tldr
+from RACE_dataset  import load_race, race_inference
+from TLDR_dataset  import load_tldr, tldr_inference
 ###########################################################
 from transformers import (
     AutoTokenizer,
@@ -68,8 +67,6 @@ args = PARSER.parse_args()
 #############################
 ### seting up wandb ie weights and biases 
 if args.wandb:
-   
-
     # Define weights noise sweep configuration
     SWEEP_CONFIG = {
         "method": "random",
@@ -95,7 +92,7 @@ def make_trainer(model, optimizer, tokenized_data):
 
     collator = DefaultDataCollator()
 
-    log_dir = "logs/fit/" + ARGS.run_name
+    log_dir = "logs/fit/" + args.run_name
     writer = SummaryWriter(log_dir=log_dir)
 
     trainer = Trainer(
@@ -110,15 +107,10 @@ def make_trainer(model, optimizer, tokenized_data):
     )
 
     return trainer, writer
-
 def main():
-    pass
-if __name__ == "__main__":
-    ### -> dataset file for each of 
-    ### the files and do preprocessing/inference from there
-    ### another file to manage aihwkit configs too?
-    ## TODO add the args 
-    model = get_model(args.ideal,args.noise)
+    if args.wandb:
+        wandb.init()
+    model = get_model(args)
     optimizer = create_optimizer(model,args.learning_rate)
     ### arg.dataset-->> will add 
     if args.dataset ==0:
@@ -132,4 +124,27 @@ if __name__ == "__main__":
         print("Invalid dataset value")
         print("Currently supports 0 or 1 for TLDR/RACE respectively")
         exit()
-    trainer = make_trainer(model=model,optimizer=optimizer,tokenized_data=tokenized_data)
+    trainer,writer = make_trainer(model=model,optimizer=optimizer,tokenized_data=tokenized_data)
+    '''
+    ->Change args to correct 
+    --> setup for correct inference function for the dataset being used
+    '''
+    if args.load:
+        print(f"Load model from '{args.checkpoint}'.")
+        model.load_state_dict(torch_load(args.checkpoint))
+
+    # Do hw-aware training if in analog domain and the model isn't loaded from
+    # an existing checkpoint
+    if args.train_hwa and not args.digital and not args.load:
+        trainer.train()
+        torch_save(model.state_dict(), args.checkpoint)
+    if args.dataset ==0:
+        tldr_inference(model, trainer, init_dataset, eval_data, writer)
+    elif args.dataset ==1:
+        race_inference(model, trainer, init_dataset, eval_data, writer)
+
+if __name__ == "__main__":
+    if args.wandb:
+        wandb.agent(SWEEP_ID, function=main, count=4)
+    else:
+        main()

@@ -9,16 +9,14 @@ from aihwkit.simulator.configs import (
     WeightModifierParameter,
     MappingParameter,
 )
-
 from aihwkit.simulator.presets import PresetIOParameters
 from aihwkit.inference import PCMLikeNoiseModel, GlobalDriftCompensation
 from aihwkit.nn.conversion import convert_to_analog
 from aihwkit.optim import AnalogSGD
+################################################################
+from transformers import GPT2ForSequenceClassification
+MODEL_NAME = "gpt2"
 
-
-# max length and stride specific to pretrained model
-MAX_LENGTH = 320
-DOC_STRIDE = 128
 def create_ideal_rpu_config(tile_size=512):
     """Create RPU Config with ideal conditions"""
     rpu_config = InferenceRPUConfig(
@@ -71,25 +69,26 @@ def create_rpu_config(modifier_noise, tile_size=512, dac_res=256, adc_res=256):
     )
     return rpu_config
 #######################################################################
-def create_model(rpu_config,num_classes):
+def create_model(ARGS,rpu_config,num_classes):
     """Return Question Answering model and whether or not it was loaded from a checkpoint"""
 
-    #model = AutoModelForCausalLM.pretrained(MODEL_NAME)#AutoModelForQuestionAnswering.from_pretrained(MODEL_NAME)
-    model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
+    #model = AutoModelForCausalLM.pretra,ined(MODEL_NAME)#AutoModelForQuestionAnswering.from_pretrained(MODEL_NAME)
+    #model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
     #GPT2ForSequenceClassification.from_pretrained(model_name, num_labels=num_classes)
-    if not ARGS.digital: ### TODO convert to something different
+    model = GPT2ForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=num_classes)
+    if not ARGS.digital: 
         model = convert_to_analog(model, rpu_config)
         model.remap_analog_weights()
 
     print(model)
     return model
 
-def get_model(ideal = True,noise=0.1):
-    if ideal:
+def get_model(ARGS):
+    if ARGS.ideal:
         rpu_config = create_ideal_rpu_config()
     else:
-        rpu_config = create_rpu_config(modifier_noise=noise)
-    model = create_model(rpu_config)
+        rpu_config = create_rpu_config(modifier_noise=ARGS.noise)
+    model = create_model(rpu_config,ARGS)
     return model
 def create_optimizer(model,learning_rate):
     """Create the analog-aware optimizer"""
