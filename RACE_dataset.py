@@ -43,7 +43,7 @@ def preprocess_train(dataset):
     print(f"sanity check here len answer: {len(dataset['answer'])} vs  {len(dataset['answer'][0])}")
     prompt1 = f"Article: {dataset['article']}\n"
     prompt2 = f"Question: {dataset['question']}\n"
-    prompt3 = f"Options: A){dataset['options'][0]},B){dataset['options'][1]}, C){dataset['options'][2]}, D){dataset['optiona'][3]}"
+    prompt3 = f"Options: A){dataset['options'][0]},B){dataset['options'][1]}, C){dataset['options'][2]}, D){dataset['options'][3]}"
     full_prompt = prompt1 + prompt2 + prompt3
     print(len(full_prompt))
     #print(dataset['answer'])
