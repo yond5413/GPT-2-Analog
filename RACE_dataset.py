@@ -164,7 +164,9 @@ def race_inference(model, trainer, squad, eval_data, writer, max_inference_time=
     # Helper functions
     def predict():
         # Perform inference + evaluate metric here
+        print("about to predict")
         raw_predictions = trainer.predict(eval_data)
+        print("did we do it?????")
         predictions = postprocess_predictions(
             squad["validation"], eval_data, raw_predictions.predictions
         )
@@ -192,7 +194,7 @@ def race_inference(model, trainer, squad, eval_data, writer, max_inference_time=
     
     ground_truth = [row['answer'] for row in squad["validation"]]
     #ground_truth = [{"id": ex["id"], "answers": ex["answers"]} for ex in squad["validation"]]
-
+    print("GT's ready")
     t_inference_list = np.logspace(0, np.log10(float(max_inference_time)), n_times).tolist()
 
     # Get the initial metrics
@@ -201,6 +203,7 @@ def race_inference(model, trainer, squad, eval_data, writer, max_inference_time=
 
     for t_inference in t_inference_list:
         model.drift_analog_weights(t_inference)
+        print(f"time: {t_inference} was set")
         f1, exact_match = predict()
         write_metrics(f1, exact_match, t_inference)
 
