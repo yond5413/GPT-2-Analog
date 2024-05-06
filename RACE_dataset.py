@@ -52,7 +52,7 @@ def preprocess_train(dataset):
     #print(f"{dataset.num_rows}")
     
     label =  [labels[i] for i in dataset['answer']]#[labels[i for i in dataset['answer']]]#choice[dataset['choice']]
-    #tokenized_dataset = TOKENIZER(full_prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
+    tokenized_dataset = TOKENIZER(full_prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
     
     tokenized_dataset['label'] = label 
     #-> add tokenizer
