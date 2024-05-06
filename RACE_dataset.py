@@ -26,6 +26,7 @@ def load_race():
    # ehovy/race nicer format but larger
     # Preprocessing changes number of samples, so we need to remove some columns so
     # the data updates properly
+    print(race)
     tokenized_data = race.map(
         preprocess_train, batched=True, remove_columns=race["train"].column_names
     )
