@@ -66,7 +66,7 @@ def preprocess_train(dataset):
             if key not in tokenized_dataset:
                 tokenized_dataset[key] = []
             tokenized_dataset[key].append(value)
-
+    return tokenized_dataset
     '''for i in range(len(dataset)):
     
     prompt1 = f"Article: {dataset['article']}\n"
