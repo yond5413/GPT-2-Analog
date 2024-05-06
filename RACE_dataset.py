@@ -46,6 +46,8 @@ def preprocess_train(dataset):
     tokenized_dataset = TOKENIZER(full_prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
     tokenized_dataset['label'] = label 
     #-> add tokenizer
+    for key, value in tokenized_dataset.items():
+        print(f"Length of {key}: {len(value)}")
     return tokenized_dataset
 
 def preprocess_validation(dataset):
