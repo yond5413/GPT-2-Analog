@@ -39,7 +39,7 @@ def preprocess_train(dataset):
     prompt3 = f"Options: A){dataset['article'][0]},B){dataset['article'][1]}, C){dataset['article'][2]}, D){dataset['article'][3]}"
     full_prompt = prompt1 + prompt2 + prompt3
     print(dataset['answer'])
-    label = labels[dataset['answer']]#choice[dataset['choice']]
+    label =  [labels[i] for i in dataset['answer']]#[labels[i for i in dataset['answer']]]#choice[dataset['choice']]
     tokenized_dataset = TOKENIZER(full_prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
     tokenized_dataset['label'] = label 
     #-> add tokenizer
