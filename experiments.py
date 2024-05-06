@@ -110,6 +110,7 @@ def make_trainer(model, optimizer, tokenized_data):
 def main():
     if args.wandb:
         wandb.init()
+    
     model = get_model(args)
     optimizer = create_optimizer(model,args.learning_rate)
     ### arg.dataset-->> will add 
