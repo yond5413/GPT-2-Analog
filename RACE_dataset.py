@@ -14,6 +14,9 @@ MAX_LENGTH = 320
 DOC_STRIDE = 128
 #constants
 TOKENIZER = AutoTokenizer.from_pretrained("gpt2")#GPT2Model.from_pretrained(MODEL_NAME)
+TOKENIZER.pad_token = TOKENIZER.eos_token
+TOKENIZER.add_special_tokens({'pad_token': '[PAD]'})
+
 categories =['A', 'B', 'C','D']
 labels = {categories[i]:i for i in range(len(categories))}
 def load_race():
@@ -38,7 +41,7 @@ def preprocess_train(dataset):
     prompt2 = f"Question: {dataset['question']}\n"
     prompt3 = f"Options: A){dataset['article'][0]},B){dataset['article'][1]}, C){dataset['article'][2]}, D){dataset['article'][3]}"
     full_prompt = prompt1 + prompt2 + prompt3
-    print(dataset['answer'])
+    #print(dataset['answer'])
     label =  [labels[i] for i in dataset['answer']]#[labels[i for i in dataset['answer']]]#choice[dataset['choice']]
     tokenized_dataset = TOKENIZER(full_prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
     tokenized_dataset['label'] = label 
