@@ -30,11 +30,12 @@ def load_race():
     tokenized_data = race.map(
         preprocess_train, batched=True, remove_columns=race["train"].column_names
     )
-    print(tokenized_data.keys())
+    
     eval_data = race["validation"].map(
         preprocess_validation, batched=True, remove_columns=race["validation"].column_names
     )
-    print(eval_data.keys())
+    print(tokenized_data)
+    print(eval_data)
     return race, tokenized_data, eval_data
 ###########################################################################
 def preprocess_train(dataset):
@@ -95,6 +96,7 @@ def preprocess_train(dataset):
 
 def preprocess_validation(dataset):
     """Preprocess the validation set"""
+    print("preprocessing vallllllll")
     tokenized_dataset = {}
     for i in range(len(dataset)):
         prompt1 = f"Article: {dataset['article'][i]}\n"
