@@ -47,7 +47,7 @@ PARSER.add_argument(
 )
 PARSER.add_argument("-t", "--train_hwa", help="Use Hardware-Aware training", action="store_true")
 PARSER.add_argument(
-    "-L", "--load", help="Use when loadiung from training checkpoint", action="store_true"
+    "-L", "--load", help="Use when loading from training checkpoint", action="store_true"
 )
 
 PARSER.add_argument(

@@ -185,11 +185,11 @@ def race_inference(model, trainer, squad, eval_data, writer, max_inference_time=
             wandb.log({"t_inference": t_inference, "f1": f1, "exact_match": exact_match})
 
         print(f"Exact match: {exact_match: .2f}\t" f"F1: {f1: .2f}\t" f"Drift: {t_inference: .2e}")
-
+    print("Model going into eval......")
     model.eval()
 
     metric = load("squad")
-
+    
     ground_truth = [row['answer'] for row in squad["validation"]]
     #ground_truth = [{"id": ex["id"], "answers": ex["answers"]} for ex in squad["validation"]]
 
