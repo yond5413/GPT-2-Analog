@@ -19,7 +19,7 @@ labels = {categories[i]:i for i in range(len(categories))}
 def load_race():
     """Load the SQuAD dataset, the tokenized version, and the validation set"""
     #race = load_dataset("EleutherAI/race") ####RACE### dataset
-    race = load_dataset("ehovy/race")
+    race = load_dataset("ehovy/race",'middle') ## ->requires either (all,high,or middle as second param)
    # ehovy/race nicer format but larger
     # Preprocessing changes number of samples, so we need to remove some columns so
     # the data updates properly
