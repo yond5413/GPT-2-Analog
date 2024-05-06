@@ -44,7 +44,7 @@ def preprocess_train(dataset):
     #print(dataset['answer'])
     print("dataset length")
     print(len(dataset))
-    print(f"{dataset.num_rows}")
+    #print(f"{dataset.num_rows}")
    
     label =  [labels[i] for i in dataset['answer']]#[labels[i for i in dataset['answer']]]#choice[dataset['choice']]
     tokenized_dataset = TOKENIZER(full_prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
