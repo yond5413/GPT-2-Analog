@@ -50,7 +50,7 @@ def preprocess_train(dataset):
         full_prompt = prompt1 + prompt2 + prompt3
         
         # Print the length of the current prompt
-        print("Length of full prompt:", len(full_prompt))
+        #print("Length of full prompt:", len(full_prompt))
         
         # Extract the label for the current entry
         label = labels[dataset['answer'][i]]
@@ -66,6 +66,9 @@ def preprocess_train(dataset):
             if key not in tokenized_dataset:
                 tokenized_dataset[key] = []
             tokenized_dataset[key].append(value)
+    for key, value in tokenized_dataset.items():
+        print(f"Length of {key}: {len(value)}")
+    print(len(tokenized_dataset))
     return tokenized_dataset
     '''for i in range(len(dataset)):
     
