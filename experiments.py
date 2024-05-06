@@ -137,6 +137,7 @@ def main():
     # Do hw-aware training if in analog domain and the model isn't loaded from
     # an existing checkpoint
     if args.train_hwa and not args.digital and not args.load:
+        print("Hardware aware training.......")
         trainer.train()
         torch_save(model.state_dict(), args.checkpoint)
     if args.dataset ==0:
