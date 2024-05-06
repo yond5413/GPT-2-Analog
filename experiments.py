@@ -110,9 +110,7 @@ def make_trainer(model, optimizer, tokenized_data):
 def main():
     if args.wandb:
         wandb.init()
-    
-    model = get_model(args)
-    optimizer = create_optimizer(model,args.learning_rate)
+
     ### arg.dataset-->> will add 
     if args.dataset ==0:
         num_classes = 4
@@ -125,6 +123,8 @@ def main():
         print("Invalid dataset value")
         print("Currently supports 0 or 1 for TLDR/RACE respectively")
         exit()
+    model = get_model(args,num_classes)
+    optimizer = create_optimizer(model,args.learning_rate)
     trainer,writer = make_trainer(model=model,optimizer=optimizer,tokenized_data=tokenized_data)
     '''
     ->Change args to correct 
