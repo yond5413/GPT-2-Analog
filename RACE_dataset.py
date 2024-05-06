@@ -11,7 +11,7 @@ queried from Hugging Face API
 '''
 ########
 MAX_LENGTH = 1000#320
-DOC_STRIDE = 128
+DOC_STRIDE = 512#128
 #constants
 TOKENIZER = AutoTokenizer.from_pretrained("gpt2")#GPT2Model.from_pretrained(MODEL_NAME)
 TOKENIZER.pad_token = TOKENIZER.eos_token
@@ -26,7 +26,7 @@ def load_race():
    # ehovy/race nicer format but larger
     # Preprocessing changes number of samples, so we need to remove some columns so
     # the data updates properly
-    print(race)
+    #print(race)
     tokenized_data = race.map(
         preprocess_train, batched=True, remove_columns=race["train"].column_names
     )
