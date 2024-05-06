@@ -40,6 +40,7 @@ def preprocess_train(dataset):
     """Preprocess the training dataset"""
     print(f"sanity check here len article: {len(dataset['article'])} vs  {len(dataset['article'][0])}")
     print(f"sanity check here len question: {len(dataset['question'])} vs  {len(dataset['question'][0])}")
+    print(f"sanity check here len answer: {len(dataset['answer'])} vs  {len(dataset['answer'][0])}")
     prompt1 = f"Article: {dataset['article']}\n"
     prompt2 = f"Question: {dataset['question']}\n"
     prompt3 = f"Options: A){dataset['options'][0]},B){dataset['options'][1]}, C){dataset['options'][2]}, D){dataset['optiona'][3]}"
