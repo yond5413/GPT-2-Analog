@@ -38,9 +38,37 @@ def load_race():
 ###########################################################################
 def preprocess_train(dataset):
     """Preprocess the training dataset"""
-    print(f"sanity check here len article: {len(dataset['article'])} vs  {len(dataset['article'][0])}")
-    print(f"sanity check here len question: {len(dataset['question'])} vs  {len(dataset['question'][0])}")
-    print(f"sanity check here len answer: {len(dataset['answer'])} vs  {len(dataset['answer'][0])}")
+    #print(f"sanity check here len article: {len(dataset['article'])} vs  {len(dataset['article'][0])}")
+    #print(f"sanity check here len question: {len(dataset['question'])} vs  {len(dataset['question'][0])}")
+    #print(f"sanity check here len answer: {len(dataset['answer'])} vs  {len(dataset['answer'][0])}")
+     # Construct the prompt for the current entry
+    tokenized_dataset = {}
+    for i in range(len(dataset)):
+        prompt1 = f"Article: {dataset['article'][i]}\n"
+        prompt2 = f"Question: {dataset['question'][i]}\n"
+        prompt3 = f"Options: A){dataset['options'][i][0]}, B){dataset['options'][i][1]}, C){dataset['options'][i][2]}, D){dataset['options'][i][3]}"
+        full_prompt = prompt1 + prompt2 + prompt3
+        
+        # Print the length of the current prompt
+        print("Length of full prompt:", len(full_prompt))
+        
+        # Extract the label for the current entry
+        label = labels[dataset['answer'][i]]
+        
+        # Tokenize the current prompt
+        tokenized = TOKENIZER(full_prompt, padding="max_length", stride=DOC_STRIDE, max_length=MAX_LENGTH, truncation=True)
+        
+        # Add the label to the tokenized data
+        tokenized['label'] = label 
+        
+        # Add the tokenized data to the tokenized_dataset dictionary
+        for key, value in tokenized.items():
+            if key not in tokenized_dataset:
+                tokenized_dataset[key] = []
+            tokenized_dataset[key].append(value)
+
+    '''for i in range(len(dataset)):
+    
     prompt1 = f"Article: {dataset['article']}\n"
     prompt2 = f"Question: {dataset['question']}\n"
     prompt3 = f"Options: A){dataset['options'][0]},B){dataset['options'][1]}, C){dataset['options'][2]}, D){dataset['options'][3]}"
@@ -52,14 +80,14 @@ def preprocess_train(dataset):
     #print(f"{dataset.num_rows}")
     
     label =  [labels[i] for i in dataset['answer']]#[labels[i for i in dataset['answer']]]#choice[dataset['choice']]
-    tokenized_dataset = TOKENIZER(full_prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
+    tokenized = TOKENIZER(full_prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
     
     tokenized_dataset['label'] = label 
     #-> add tokenizer
     for key, value in tokenized_dataset.items():
         print(f"Length of {key}: {len(value)}")
     print(len(tokenized_dataset))
-    return tokenized_dataset
+    return tokenized_dataset'''
 
 def preprocess_validation(dataset):
     """Preprocess the validation set"""
