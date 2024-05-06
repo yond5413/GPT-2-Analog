@@ -190,7 +190,7 @@ def race_inference(model, trainer, squad, eval_data, writer, max_inference_time=
 
     metric = load("squad")
 
-    ground_truth = [row['choice'] for row in squad["validation"]]
+    ground_truth = [row['answer'] for row in squad["validation"]]
     #ground_truth = [{"id": ex["id"], "answers": ex["answers"]} for ex in squad["validation"]]
 
     t_inference_list = np.logspace(0, np.log10(float(max_inference_time)), n_times).tolist()
