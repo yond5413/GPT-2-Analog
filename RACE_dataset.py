@@ -10,7 +10,7 @@ File manages datasets for benchmarks
 queried from Hugging Face API
 '''
 ########
-MAX_LENGTH = 320
+MAX_LENGTH = 1000#320
 DOC_STRIDE = 128
 #constants
 TOKENIZER = AutoTokenizer.from_pretrained("gpt2")#GPT2Model.from_pretrained(MODEL_NAME)
