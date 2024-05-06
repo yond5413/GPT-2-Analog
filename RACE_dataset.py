@@ -34,7 +34,9 @@ def load_race():
     eval_data = race["validation"].map(
         preprocess_validation, batched=True, remove_columns=race["validation"].column_names
     )
+    print('tokenized_data')
     print(tokenized_data)
+    print('eval_below')
     print(eval_data)
     return race, tokenized_data, eval_data
 ###########################################################################
