@@ -36,7 +36,7 @@ PARSER.add_argument(
     help="Add to use ideal config instead of default noisy one",
     action="store_true",
 )
-PARSER.add_argument("-w", "--wandb", help="Add to use wandb", action="store_true", type= bool, default=True)
+PARSER.add_argument("-w", "--wandb", help="Add to use wandb", type= bool, default=True)
 PARSER.add_argument("-n", "--noise", help="Modifier noise", default=0.1, type=float)
 PARSER.add_argument(
     "-r",
