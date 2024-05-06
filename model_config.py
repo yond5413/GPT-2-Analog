@@ -91,7 +91,7 @@ def get_model(ARGS,num_classes):
         rpu_config = create_ideal_rpu_config()
     else:
         rpu_config = create_rpu_config(ARGS,modifier_noise=ARGS.noise)
-    model = create_model(rpu_config,ARGS,num_classes)
+    model = create_model(ARGS,rpu_config,num_classes)
     return model
 def create_optimizer(model,learning_rate):
     """Create the analog-aware optimizer"""
