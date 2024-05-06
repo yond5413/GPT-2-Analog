@@ -7,4 +7,5 @@ To install of the dependencies run this command in your cli
 The goal of this project is to research how the gpt-2 model will perform
 across various datasets. The two most notable are SQuAD and RACE for LLM
 benchmarks. I also choose TLDR_News as the dataset seemed like a good fit for
-the task.  
+the task. Essentially the goal was to finetune gpt-2 on these datasets that 
+are centered around NLU(Natural Language Understanding).
