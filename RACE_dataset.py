@@ -39,6 +39,7 @@ def load_race():
 def preprocess_train(dataset):
     """Preprocess the training dataset"""
     print(f"sanity check here len article: {len(dataset['article'])} vs  {len(dataset['article'][0])}")
+    print(dataset[0])
     prompt1 = f"Article: {dataset['article']}\n"
     prompt2 = f"Question: {dataset['question']}\n"
     prompt3 = f"Options: A){dataset['article'][0]},B){dataset['article'][1]}, C){dataset['article'][2]}, D){dataset['article'][3]}"
