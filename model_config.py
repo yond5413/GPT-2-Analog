@@ -14,6 +14,8 @@ from aihwkit.inference import PCMLikeNoiseModel, GlobalDriftCompensation
 from aihwkit.nn.conversion import convert_to_analog
 from aihwkit.optim import AnalogSGD
 ################################################################
+from aihwkit.simulator.rpu_base import cuda
+#########
 from transformers import GPT2ForSequenceClassification
 import wandb
 
@@ -81,8 +83,10 @@ def create_model(ARGS,rpu_config,num_classes):
     if not ARGS.digital: 
         model = convert_to_analog(model, rpu_config)
         model.remap_analog_weights()
-
+    if cuda.is_compiled():
+        model.cuda()
     print(model)
+
     return model
 
 def get_model(ARGS,num_classes):
