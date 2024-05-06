@@ -15,6 +15,8 @@ from aihwkit.nn.conversion import convert_to_analog
 from aihwkit.optim import AnalogSGD
 ################################################################
 from transformers import GPT2ForSequenceClassification
+import wandb
+
 MODEL_NAME = "gpt2"
 
 def create_ideal_rpu_config(tile_size=512):
@@ -35,7 +37,7 @@ def create_ideal_rpu_config(tile_size=512):
     )
     return rpu_config
 ################################################################################
-def create_rpu_config(modifier_noise, tile_size=512, dac_res=256, adc_res=256):
+def create_rpu_config(ARGS,modifier_noise, tile_size=512, dac_res=256, adc_res=256):
     """Create RPU Config emulated typical PCM Device"""
     if ARGS.wandb:
         modifier_noise = wandb.config.modifier_noise
@@ -87,7 +89,13 @@ def get_model(ARGS):
     if ARGS.ideal:
         rpu_config = create_ideal_rpu_config()
     else:
-        rpu_config = create_rpu_config(modifier_noise=ARGS.noise)
+        rpu_config = create_rpu_config(ARGS)
+
+    model = create_model(rpu_config)
+    if ARGS.ideal:
+        rpu_config = create_ideal_rpu_config()
+    else:
+        rpu_config = create_rpu_config(ARGS)
     model = create_model(rpu_config,ARGS)
     return model
 def create_optimizer(model,learning_rate):
