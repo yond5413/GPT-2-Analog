@@ -29,7 +29,7 @@ tokenizer = AutoTokenizer.from_pretrained("gpt2")#GPT2Model.from_pretrained(MODE
 #############################
 # cli parser
 PARSER = ArgumentParser("Analog GPT-2")
-PARSER.add_argument("-d", "--digital", help="Add to use digital inference", action="store_true")
+PARSER.add_argument("-d", "--digital", help="Add to use digital inference", type = bool, default= True)
 PARSER.add_argument(
     "-i",
     "--ideal",
