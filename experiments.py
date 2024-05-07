@@ -80,8 +80,8 @@ if args.wandb:
         "name": "modifier noise sweep",
         "metric": {"goal": "maximize", "name": "exact_match"},
     "parameters": {"modifier_noise": {"values": [0,0, 0.05, 0.1, 0.2]},
-                  "digital":{True,False,False,False,False},
-                    "load":{False,True,True,True,True} },
+                  "digital":{"values":[True,False,False,False,False]},
+                    "load":{"values":[False,True,True,True,True]} },
     }
 
     SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project="gpt2-weight-noise-experiment")
