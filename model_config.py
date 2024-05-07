@@ -42,8 +42,10 @@ def create_ideal_rpu_config(tile_size=512):
 def create_rpu_config(ARGS,modifier_noise, tile_size=512, dac_res=256, adc_res=256):
     """Create RPU Config emulated typical PCM Device"""
     if ARGS.wandb:
+        print(modifier_noise)
         modifier_noise = wandb.config.modifier_noise
-
+        print("wb is everywhere you go")
+        print(modifier_noise)
     rpu_config = InferenceRPUConfig(
         clip=WeightClipParameter(type=WeightClipType.FIXED_VALUE, fixed_value=1.0),
         modifier=WeightModifierParameter(
