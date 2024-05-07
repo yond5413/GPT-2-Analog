@@ -144,7 +144,10 @@ def main():
         #trainer.train()
         #train(model,train_set,optimizer)
         torch_save(model.state_dict(), args.checkpoint)
-   
+    if args.digital: #and not args.load:
+        print("default gpt-2 with finetuning")
+        train(model,train_set,optimizer)
+        torch_save(model.state_dict(), args.checkpoint)
     print("TLDF dataset inference......")
     #tldr_inference(args,model, trainer, init_dataset, eval_data, writer)
     tldr_inference(args,model,init_dataset, val_set, writer)
