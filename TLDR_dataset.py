@@ -5,6 +5,7 @@ import numpy as np
 import wandb
 from transformers import AutoTokenizer
 from tqdm import tqdm
+import torch
 ########
 '''
 File manages datasets for benchmarks
@@ -35,7 +36,9 @@ def load_tldr():
     #eval_data = tldr["validation"].map(
     #    preprocess_validation, batched=True, remove_columns=tldr["validation"].column_names
     #)
+    print('Preprocessing Training set')
     train_set= preprocess_train(tldr['train'])
+    print('Preprocessing Validation set')
     val_set = preprocess_train(tldr['validation'])
     return tldr, train_set,val_set#tokenized_data, eval_data
 ###########################################################################
@@ -46,7 +49,7 @@ def preprocess_train(dataset):
     '''
     ## dataset["question"] = [q.lstrip() for q in dataset["question"]] 
     ## ex for preprocessing---->
-    ret = {}
+    ret =[]
     progress_bar = tqdm(total=len(dataset))
     for i in range(len(dataset)):
         curr = {}
@@ -56,10 +59,9 @@ def preprocess_train(dataset):
         #print(f'category:{category}, label:{labels[category]}')
         curr['prompt'] = prompt
         curr['target']  = category#labels[category]
-        ret[i] = curr
+        ret.append(curr)#ret[i] = curr
         progress_bar.update(1)
     return ret 
-
 
 def postprocess_predictions(examples, features, raw_predictions,):
     #features.set_format(type=features.format["type"], columns=list(features.features.keys()))
@@ -79,7 +81,7 @@ def postprocess_predictions(examples, features, raw_predictions,):
     return predictions
 
 
-def tldr_inference(ARGS,model, trainer, squad, eval_data, writer, max_inference_time=1e6, n_times=9,wandb_used = True):
+def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6, n_times=9):
     """Perform inference experiment at weight noise level specified at runtime.
     SQuAD exact match and f1 metrics are captured in Tensorboard
     """
@@ -87,15 +89,24 @@ def tldr_inference(ARGS,model, trainer, squad, eval_data, writer, max_inference_
     # Helper functions
     def predict():
         # Perform inference + evaluate metric here
-        raw_predictions = trainer.predict(eval_data)
-        predictions = postprocess_predictions(
-            squad["validation"], eval_data, raw_predictions.predictions
-        )
+        pred = []
+        progress_bar = tqdm(total=len(eval_data))
+        for sample in eval_data:       
+            #raw_predictions = trainer.predict(eval_data)
+            input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
+            with torch.no_grad():
+                outputs = model(**input_ids)
+            predicted_index = torch.argmax(outputs.logits)
+            pred.append(predicted_index)
+            progress_bar.update(1)
+            #predictions = postprocess_predictions(
+            #    squad["validation"], eval_data, raw_predictions.predictions
+            #)
 
-        # Format to list of dicts instead of a large dict
-        #formatted_preds = [{"headline": k, "prediction": v} for k, v in predictions.items()]
-        formatted_preds = predictions
-        out_metric = metric.compute(predictions=formatted_preds, references=ground_truth)
+            # Format to list of dicts instead of a large dict
+            #formatted_preds = [{"headline": k, "prediction": v} for k, v in predictions.items()]
+            formatted_preds = predictions
+            out_metric = metric.compute(predictions=formatted_preds, references=ground_truth)
 
         return out_metric["f1"], out_metric["exact_match"]
 

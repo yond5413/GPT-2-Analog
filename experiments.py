@@ -79,9 +79,9 @@ if args.wandb:
     SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project="gpt2-weight-noise-experiment")
 #############################
 
-def make_trainer(model, optimizer, tokenized_data):
+def make_writer():#make_trainer(model, optimizer, tokenized_data):
     """Create the Huggingface Trainer"""
-    training_args = TrainingArguments(
+    '''training_args = TrainingArguments(
         output_dir="./", ###-> add dataset arg
         save_strategy="no",
         per_device_train_batch_size=4,
@@ -105,18 +105,21 @@ def make_trainer(model, optimizer, tokenized_data):
         tokenizer=tokenizer,
         optimizers=(optimizer, None),
         callbacks=[TensorBoardCallback(writer)],
-    )
-
-    return trainer, writer
+    )'''
+    log_dir = "logs/fit/" + args.run_name
+    writer = SummaryWriter(log_dir=log_dir)
+    return writer
+    #return trainer, writer
 def main():
     if args.wandb:
         wandb.init()
     num_classes = 5
-    init_dataset, tokenized_data, eval_data = load_tldr()
+    init_dataset, train, val = load_tldr()
     
-    model = get_model(args,num_classes)
+    model = get_model(args)
     optimizer = create_optimizer(model,args.learning_rate)
-    trainer,writer = make_trainer(model=model,optimizer=optimizer,tokenized_data=tokenized_data)
+    #trainer,writer = make_trainer(model=model,optimizer=optimizer,tokenized_data=tokenized_data)
+    writer = make_writer()
     '''
     ->Change args to correct 
     --> setup for correct inference function for the dataset being used
@@ -129,12 +132,12 @@ def main():
     # an existing checkpoint
     if args.train_hwa and not args.digital and not args.load:
         print("Hardware aware training.......")
-        trainer.train()
+        #trainer.train()
         torch_save(model.state_dict(), args.checkpoint)
    
     print("TLDF dataset inference......")
-    tldr_inference(args,model, trainer, init_dataset, eval_data, writer)
-
+    #tldr_inference(args,model, trainer, init_dataset, eval_data, writer)
+    tldr_inference(args,model,init_dataset, eval_data, writer)
 if __name__ == "__main__":
     if args.wandb:
         wandb.agent(SWEEP_ID, function=main, count=4)
