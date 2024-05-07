@@ -117,8 +117,11 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
                 input_ids = TOKENIZER.encode(curr, return_tensors="pt")#, max_length=MAX_LENGTH, truncation=True)
                 #input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
                 toks_pred = input_ids[0].numel() - prompt_tok_count
+                
                 input_ids.to(device)
-                print()
+                print(toks_pred)
+                print(input_ids)
+                print("in_ids device:", input_ids.device)
                 #with torch.no_grad():
                 outputs = model(*input_ids)
                 logits = outputs.logits
