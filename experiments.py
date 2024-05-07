@@ -101,11 +101,11 @@ def train(model,train,optimizer,epochs = 25):
             #raw_predictions = trainer.predict(eval_data)
             model.zero_grad()
             scores= []
-            prompt_toks=tokenizer(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)[0]
+            prompt_toks=tokenizer.encode(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)[0]
             prompt_tok_count = prompt_toks.numel()
             for c in categories:
                 text = sample['prompt']+' ' + c
-                input_ids = tokenizer(text, return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
+                input_ids = tokenizer.encode(text, return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
                 #input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
                 toks_pred = input_ids[0].numel() - prompt_tok_count
                 input_ids.to(device)
