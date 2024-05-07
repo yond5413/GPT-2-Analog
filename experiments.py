@@ -40,7 +40,8 @@ PARSER.add_argument(
     "-i",
     "--ideal",
     help="Add to use ideal config instead of default noisy one",
-    action="store_true",
+    type = bool, default= True
+    #action="store_true",
 )
 PARSER.add_argument("-w", "--wandb", help="Add to use wandb", type= bool, default=True)
 PARSER.add_argument("-n", "--noise", help="Modifier noise", default=0.1, type=float)
@@ -51,9 +52,9 @@ PARSER.add_argument(
     default=datetime.now().strftime("%Y%m%d-%H%M%S"),
     type=str,
 )
-PARSER.add_argument("-t", "--train_hwa", help="Use Hardware-Aware training", action="store_true")
+PARSER.add_argument("-t", "--train_hwa", help="Use Hardware-Aware training",type = bool, default= True)# action="store_true")
 PARSER.add_argument(
-    "-L", "--load", help="Use when loading from training checkpoint", action="store_true"
+    "-L", "--load", help="Use when loading from training checkpoint", type = bool, default= True#action="store_true"
 )
 
 PARSER.add_argument(
@@ -114,32 +115,6 @@ def train(model,train,optimizer,epochs = 3):
             # finetuning
             #pass
 def make_writer():#make_trainer(model, optimizer, tokenized_data):
-    """Create the Huggingface Trainer"""
-    '''training_args = TrainingArguments(
-        output_dir="./", ###-> add dataset arg
-        save_strategy="no",
-        per_device_train_batch_size=4,
-        per_device_eval_batch_size=4,
-        num_train_epochs=3,
-        weight_decay=0.001,
-        no_cuda=False,
-    )
-
-    collator = DefaultDataCollator()
-
-    log_dir = "logs/fit/" + args.run_name
-    writer = SummaryWriter(log_dir=log_dir)
-
-    trainer = Trainer(
-        model=model,
-        args=training_args,
-        data_collator=collator,
-        train_dataset=tokenized_data["train"],
-        eval_dataset=tokenized_data["validation"],
-        tokenizer=tokenizer,
-        optimizers=(optimizer, None),
-        callbacks=[TensorBoardCallback(writer)],
-    )'''
     log_dir = "logs/fit/" + args.run_name
     writer = SummaryWriter(log_dir=log_dir)
     return writer
