@@ -104,13 +104,15 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
         for sample in eval_data:       
             #raw_predictions = trainer.predict(eval_data)
             scores= []
-            prompt_toks=TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)[0]
+            #prompt_toks=TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)[0]
+            prompt_toks = TOKENIZER(sample['prompt'], return_tensors="pt")[0]
             print(prompt_toks)
             print(len(prompt_toks))
             prompt_tok_count = prompt_toks.numel()
+            print('c ->loops')
             for c in categories: ##-> class labels
                 curr = f'{sample} {c}'
-                input_ids = TOKENIZER(curr, return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
+                input_ids = TOKENIZER(curr, return_tensors="pt")#, max_length=MAX_LENGTH, truncation=True)
                 #input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
                 toks_pred = input_ids[0].numel() - prompt_tok_count
                 input_ids.to(device)
