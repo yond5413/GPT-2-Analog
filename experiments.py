@@ -165,6 +165,7 @@ def main():
 if __name__ == "__main__":
     if args.wandb:
         wandb.init()
+        print(wandb.config.modifier_noise)
         args.digital = wandb.config.digital
         args.load = wandb.config.load
         print(f"digital: {args.digital}")
