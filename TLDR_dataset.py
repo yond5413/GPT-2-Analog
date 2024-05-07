@@ -44,7 +44,7 @@ def preprocess_train(dataset):
     '''
     ## dataset["question"] = [q.lstrip() for q in dataset["question"]] 
     ## ex for preprocessing---->
-    ret = []
+    ret = {}
     for i in range(len(dataset)):
         curr = {}
         prompt = f"headline: {dataset['headline'][i]} \n context:{dataset['headline'][i]} "
@@ -53,12 +53,12 @@ def preprocess_train(dataset):
         print(f'category:{category}, label:{labels[category]}')
         curr['prompt'] = prompt
         curr['target']  = category#labels[category]
-        ret.append(curr)
+        ret[i] = curr
     return ret #tokenized_dataset
 
 def preprocess_validation(dataset):
     """Preprocess the validation set"""
-    ret = []
+    ret = {}
     for i in range(len(dataset)):
         curr = {}
         prompt = f"headline: {dataset['headline'][i]} \n context:{dataset['headline'][i]} "
@@ -67,7 +67,7 @@ def preprocess_validation(dataset):
         print(f'category:{category}, label:{labels[category]}')
         curr['prompt'] = prompt
         curr['target']  = category#labels[category]
-        ret.append(curr)
+        ret[i]= curr
     return ret #
 
 def postprocess_predictions(examples, features, raw_predictions,):
