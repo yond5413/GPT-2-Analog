@@ -176,6 +176,6 @@ def main():
 if __name__ == "__main__":
     if args.wandb:
         #wandb.init()
-        wandb.agent(SWEEP_ID, function=main, count=1)
+        wandb.agent(SWEEP_ID, function=main, count=5)
     else:
         main()
