@@ -80,19 +80,20 @@ def postprocess_predictions(examples, features, raw_predictions,):
         predictions.append(predicted_label)
         #predicted_class.append(predicted_class_idx)
     return predictions
-def exact_match(pred,gt):
-    ret = 0.0
-    for i in range(len(pred)):
-        if pred[i] == gt[i]:
-            ret+=1.0
-    ret /= len(pred)
-    return ret
+
 def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6, n_times=9):
     """Perform inference experiment at weight noise level specified at runtime.
     SQuAD exact match and f1 metrics are captured in Tensorboard
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # Helper functions
+    def exact_match(pred,gt):
+        ret = 0.0
+        for i in range(len(pred)):
+            if pred[i] == gt[i]:
+                ret+=1.0
+        ret /= len(pred)
+        return ret
     def predict():
         # Perform inference + evaluate metric here
         pred = []
