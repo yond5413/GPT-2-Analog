@@ -101,6 +101,8 @@ def train(model,train,optimizer,epochs = 25):
             outputs = model(**input_ids)
             logits = outputs.logits
             labels = torch.tensor(sample['target']).to(device)
+            print(logits)
+            print(labels)
             loss = F.cross_entropy(logits, labels)
 
             # Backpropagation
