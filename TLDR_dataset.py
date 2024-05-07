@@ -85,15 +85,17 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
     """Perform inference experiment at weight noise level specified at runtime.
     SQuAD exact match and f1 metrics are captured in Tensorboard
     """
-
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # Helper functions
     def predict():
         # Perform inference + evaluate metric here
         pred = []
+       
         progress_bar = tqdm(total=len(eval_data))
         for sample in eval_data:       
             #raw_predictions = trainer.predict(eval_data)
             input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
+            input_ids.to(device)
             with torch.no_grad():
                 outputs = model(**input_ids)
             predicted_index = torch.argmax(outputs.logits)
