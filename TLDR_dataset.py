@@ -100,7 +100,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
     def predict():
         # Perform inference + evaluate metric here
         pred = []
-       
+        model.to(device)
         progress_bar = tqdm(total=len(eval_data))
         for sample in eval_data:       
             #raw_predictions = trainer.predict(eval_data)
