@@ -161,7 +161,6 @@ def race_inference(model, trainer, squad, eval_data, writer, max_inference_time=
     """Perform inference experiment at weight noise level specified at runtime.
     SQuAD exact match and f1 metrics are captured in Tensorboard
     """
-
     # Helper functions
     def predict():
         # Perform inference + evaluate metric here
