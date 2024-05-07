@@ -99,7 +99,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
             with torch.no_grad():
                 outputs = model(**input_ids)
             predicted_index = torch.argmax(outputs.logits)
-            pred.append(predicted_index)
+            pred.append(predicted_index.item())
             progress_bar.update(1)
             #predictions = postprocess_predictions(
             #    squad["validation"], eval_data, raw_predictions.predictions
