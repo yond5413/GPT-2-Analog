@@ -157,7 +157,7 @@ def postprocess_predictions(examples, features, raw_predictions,):
     return predictions
 
 
-def race_inference(model, trainer, squad, eval_data, writer, max_inference_time=1e6, n_times=9,wandb_used = True):
+def race_inference(ARGS,model, trainer, squad, eval_data, writer, max_inference_time=1e6, n_times=9,wandb_used = True):
     """Perform inference experiment at weight noise level specified at runtime.
     SQuAD exact match and f1 metrics are captured in Tensorboard
     """
@@ -188,7 +188,7 @@ def race_inference(model, trainer, squad, eval_data, writer, max_inference_time=
         writer.add_scalar("val/f1", f1, t_inference)
         writer.add_scalar("val/exact_match", exact_match, t_inference)
 
-        if wandb_used:#if ARGS.wandb:## TODO to param update
+        if ARGS.wandb:## TODO to param update
             wandb.log({"t_inference": t_inference, "f1": f1, "exact_match": exact_match})
 
         print(f"Exact match: {exact_match: .2f}\t" f"F1: {f1: .2f}\t" f"Drift: {t_inference: .2e}")
