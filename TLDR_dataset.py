@@ -108,10 +108,10 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
             scores= []
             #prompt_toks=TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)[0]
             prompt_toks = TOKENIZER.encode(sample['prompt'], return_tensors="pt")[0]
-            print(prompt_toks)
-            print(len(prompt_toks))
+            #print(prompt_toks)
+            #print(len(prompt_toks))
             prompt_tok_count = prompt_toks.numel()
-            print('c ->loops')
+            #print('c ->loops')
             for c in categories: ##-> class labels
                 curr = f'{sample} {c}'
                 input_ids = TOKENIZER.encode(curr, return_tensors="pt")#, max_length=MAX_LENGTH, truncation=True)
@@ -119,7 +119,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
                 toks_pred = input_ids[0].numel() - prompt_tok_count
                 
                 #input_ids.(device)
-                print(f"device is :{device}")
+                #print(f"device is :{device}")
                 input_ids = input_ids.to(device)
                 # Synchronize
                 torch.cuda.synchronize()
