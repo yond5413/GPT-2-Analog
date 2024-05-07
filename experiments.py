@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from argparse import ArgumentParser
-from TLDR_dataset  import load_tldr, tldr_inference
+from TLDR_dataset  import load_tldr, tldr_inference, postprocess_predictions
 ###########################################################
 from transformers import (
     AutoTokenizer,
@@ -102,11 +102,38 @@ def train(model,train,optimizer,epochs = 25):
         for sample in train:       
             #raw_predictions = trainer.predict(eval_data)
             model.zero_grad()
-            '''
-            for c in categories
+            scores= []
+            prompt_toks=tokenizer(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)[0]
+            prompt_tok_count = prompt_toks.numel()
+            for c in categories:
                 text = sample['prompt']+' ' + c
-            '''
-            input_ids = tokenizer(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
+                input_ids = tokenizer(text, return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
+                #input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
+                toks_pred = input_ids[0].numel() - prompt_tok_count
+                input_ids.to(device)
+                #with torch.no_grad():
+                outputs = model(*input_ids)
+                logits = outputs.logits
+                probs = torch.softmax(logits,dim=-1)
+                targ_probs = probs[-toks_pred:]
+                argmaxs = torch.argmax(targ_probs,dim=-1)
+                maxes = targ_probs[torch.arange(targ_probs.size(0)), argmaxs] #max[-toks_pred:] 
+                scores.append(torch.max(maxes).item())
+            pred_index = postprocess_predictions(scores)
+            pred  =torch.tensor(pred_index,dtype=torch.float32).to(device)#predicted_index.to(torch.float32)
+            gt = torch.tensor(sample['target'],dtype=torch.float32).to(device)
+            loss = F.mse_loss(pred,gt)#F.cross_entropy(pred, gt)
+            gt.requires_grad_(True)
+            pred.requires_grad_(True)
+            total_loss += loss.item()
+            # Backpropagation
+            loss.backward()
+            optimizer.step()
+
+            # Update progress bar and total loss
+            
+            progress_bar.update(1)
+            ''' input_ids = tokenizer(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
             input_ids.to(device)
             ###################
             outputs = model(**input_ids)
@@ -126,7 +153,7 @@ def train(model,train,optimizer,epochs = 25):
 
             # Update progress bar and total loss
             
-            progress_bar.update(1)
+            progress_bar.update(1)'''
         print(f"Epoch {i}, Average Loss: {total_loss / len(train)}")
         
 def make_writer():

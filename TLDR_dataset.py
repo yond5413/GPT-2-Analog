@@ -64,9 +64,9 @@ def preprocess_train(dataset):
         progress_bar.update(1)
     return ret 
 
-def postprocess_predictions(examples, features, raw_predictions,):
+def postprocess_predictions(pred):
     #features.set_format(type=features.format["type"], columns=list(features.features.keys()))
-    print(
+    '''print(
         f"Post-processing {len(examples)} example predictions "
         f"split into {len(features)} features."
     )
@@ -78,8 +78,10 @@ def postprocess_predictions(examples, features, raw_predictions,):
         # Map the class index to the corresponding label
         predicted_label = categories[predicted_class_idx]
         predictions.append(predicted_label)
-        #predicted_class.append(predicted_class_idx)
-    return predictions
+        #predicted_class.append(predicted_class_idx)'''
+    scores = np.array(pred)
+    index = np.argmax(scores)
+    return index#predictions
 
 def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6, n_times=9):
     """Perform inference experiment at weight noise level specified at runtime.
@@ -101,14 +103,28 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
         progress_bar = tqdm(total=len(eval_data))
         for sample in eval_data:       
             #raw_predictions = trainer.predict(eval_data)
-            input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
-            input_ids.to(device)
-            with torch.no_grad():
-                outputs = model(*input_ids)
+            scores= []
+            prompt_toks=TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)[0]
+            prompt_tok_count = prompt_toks.numel()
+            for c in categories: ##-> class labels
+                curr = f'{sample} {c}'
+                input_ids = TOKENIZER(curr, return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
+                #input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
+                toks_pred = input_ids[0].numel() - prompt_tok_count
+                input_ids.to(device)
+                with torch.no_grad():
+                    outputs = model(*input_ids)
                 logits = outputs.logits
-            print(logits.size)
-            predicted_index = torch.argmax(outputs.logits)
-            pred.append(predicted_index.item())
+                probs = torch.softmax(logits,dim=-1)
+                targ_probs = probs[-toks_pred:]
+                argmaxs = torch.argmax(targ_probs,dim=-1)
+                maxes = targ_probs[torch.arange(targ_probs.size(0)), argmaxs] #max[-toks_pred:] 
+                scores.append(torch.max(maxes).item())
+            pred_index = postprocess_predictions(scores)
+            pred.append(pred_index)    
+                #print(logits.size())
+                #predicted_index = torch.max#torch.argmax(outputs.logits)
+                #pred.append(predicted_index.item())
             progress_bar.update(1)
             
         formatted_preds = pred
