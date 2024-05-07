@@ -54,7 +54,7 @@ def preprocess_train(dataset):
         curr['prompt'] = prompt
         curr['target']  = labels[category]
         ret.append(curr)
-    return #tokenized_dataset
+    return ret #tokenized_dataset
 
 def preprocess_validation(dataset):
     """Preprocess the validation set"""

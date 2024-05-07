@@ -1,7 +1,6 @@
 import os
 from datetime import datetime
 from argparse import ArgumentParser
-from RACE_dataset  import load_race, race_inference
 from TLDR_dataset  import load_tldr, tldr_inference
 ###########################################################
 from transformers import (
@@ -112,19 +111,9 @@ def make_trainer(model, optimizer, tokenized_data):
 def main():
     if args.wandb:
         wandb.init()
-
-    ### arg.dataset-->> will add 
-    if args.dataset ==0:
-        num_classes = 4
-        init_dataset, tokenized_data, eval_data = load_race()
-    elif args.dataset ==1:
-        num_classes = 5
-        init_dataset, tokenized_data, eval_data = load_tldr()
-    else:
-        ## error handling for invalid dataset 
-        print("Invalid dataset value")
-        print("Currently supports 0 or 1 for TLDR/RACE respectively")
-        exit()
+    num_classes = 5
+    init_dataset, tokenized_data, eval_data = load_tldr()
+    
     model = get_model(args,num_classes)
     optimizer = create_optimizer(model,args.learning_rate)
     trainer,writer = make_trainer(model=model,optimizer=optimizer,tokenized_data=tokenized_data)
