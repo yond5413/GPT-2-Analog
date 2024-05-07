@@ -78,7 +78,12 @@ if args.wandb:
 
     SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project="gpt2-weight-noise-experiment")
 #############################
-
+def train(model,train,epochs = 3):
+    model.train()
+    for i in range(0,epochd):
+        for j in range(train):
+            # finetuning
+            pass
 def make_writer():#make_trainer(model, optimizer, tokenized_data):
     """Create the Huggingface Trainer"""
     '''training_args = TrainingArguments(
@@ -114,7 +119,7 @@ def main():
     if args.wandb:
         wandb.init()
     num_classes = 5
-    init_dataset, train, val = load_tldr()
+    init_dataset, train_set, val_set = load_tldr()
     
     model = get_model(args,num_classes)
     optimizer = create_optimizer(model,args.learning_rate)
@@ -137,7 +142,7 @@ def main():
    
     print("TLDF dataset inference......")
     #tldr_inference(args,model, trainer, init_dataset, eval_data, writer)
-    tldr_inference(args,model,init_dataset, eval_data, writer)
+    tldr_inference(args,model,init_dataset, val, writer)
 if __name__ == "__main__":
     if args.wandb:
         wandb.agent(SWEEP_ID, function=main, count=4)

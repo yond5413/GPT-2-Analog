@@ -105,8 +105,8 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
 
             # Format to list of dicts instead of a large dict
             #formatted_preds = [{"headline": k, "prediction": v} for k, v in predictions.items()]
-            formatted_preds = predictions
-            out_metric = metric.compute(predictions=formatted_preds, references=ground_truth)
+        formatted_preds = pred
+        out_metric = metric.compute(predictions=formatted_preds, references=ground_truth)
 
         return out_metric["f1"], out_metric["exact_match"]
 
@@ -115,7 +115,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
         writer.add_scalar("val/f1", f1, t_inference)
         writer.add_scalar("val/exact_match", exact_match, t_inference)
 
-        if ARGS.wandb:## TODO to param update
+        if ARGS.wandb:
             wandb.log({"t_inference": t_inference, "f1": f1, "exact_match": exact_match})
 
         print(f"Exact match: {exact_match: .2f}\t" f"F1: {f1: .2f}\t" f"Drift: {t_inference: .2e}")
