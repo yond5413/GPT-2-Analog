@@ -123,9 +123,9 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
         # Compute weighted F1 score
         weighted_f1 = f1_score(ground_truth, formatted_preds, average='weighted')
 
-        exact_match = exact_match(formatted_preds,ground_truth)
+        em = exact_match(formatted_preds,ground_truth)
 
-        return micro_f1,macro_f1,weighted_f1,exact_match
+        return micro_f1,macro_f1,weighted_f1,em
         #return out_metric["f1"], out_metric["exact_match"]
 
     def write_metrics(f1, exact_match, t_inference):
