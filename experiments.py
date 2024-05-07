@@ -43,7 +43,7 @@ PARSER.add_argument(
     type = bool, default= True
     #action="store_true",
 )
-PARSER.add_argument("-w", "--wandb", help="Add to use wandb", type= bool, default=True)
+PARSER.add_argument("-w", "--wandb", help="Add to use wandb", type= bool, default=False)
 PARSER.add_argument("-n", "--noise", help="Modifier noise", default=0.1, type=float)
 PARSER.add_argument(
     "-r",
