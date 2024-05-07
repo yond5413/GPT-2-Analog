@@ -27,7 +27,8 @@ MODEL_NAME = "gpt2"
 #tokenizer = GPT2Tokenizer.from_pretrained(MODEL_NAME)
 #based_model = GPT2Model.from_pretrained(MODEL_NAME)
 #model =AutoModelForCausalLM.from_pretrained("gpt2")# GPT2Tokenizer.from_pretrained(MODEL_NAME)
-tokenizer = AutoTokenizer.from_pretrained("gpt2")#GPT2Model.from_pretrained(MODEL_NAME)
+#tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)#GPT2Model.from_pretrained(MODEL_NAME)
+tokenizer = GPT2Tokenizer.from_pretrained(MODEL_NAME)
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.add_special_tokens({'pad_token': '[PAD]'})
 #############################

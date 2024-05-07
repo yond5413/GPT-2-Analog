@@ -3,7 +3,7 @@ from evaluate import load
 from collections import OrderedDict, defaultdict
 import numpy as np
 import wandb
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, GPT2Tokenizer
 from tqdm import tqdm
 import torch
 from sklearn.metrics import f1_score
@@ -20,7 +20,8 @@ DOC_STRIDE = 128
 categories =['Sponsor', 'Big Tech & Startups', 'Science and Futuristic Technology',
                            'Programming, Design & Data Science', 'Miscellaneous']
 labels = {i:categories[i] for i in range(len(categories))}
-TOKENIZER = AutoTokenizer.from_pretrained("gpt2")#GPT2Model.from_pretrained(MODEL_NAME)
+#TOKENIZER = AutoTokenizer.from_pretrained("gpt2")#GPT2Model.from_pretrained(MODEL_NAME)
+TOKENIZER =GPT2Tokenizer.from_pretrained('gpt2')
 def load_tldr():
     """Load the SQuAD dataset, the tokenized version, and the validation set"""
     tldr = load_dataset("JulesBelveze/tldr_news")
