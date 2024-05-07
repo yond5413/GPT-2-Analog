@@ -99,7 +99,7 @@ def train(model,train,optimizer,epochs = 25):
             input_ids.to(device)
             ###################
             outputs = model(**input_ids)
-            logits = outputs
+            logits = outputs.logits
             labels = torch.tensor(sample['target']).to(device)
             loss = F.cross_entropy(logits, labels)
 
