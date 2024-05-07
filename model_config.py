@@ -85,7 +85,7 @@ def create_model(ARGS,rpu_config,num_classes):
         model.remap_analog_weights()
     if cuda.is_compiled():
         print("cuda compiled")
-        #model.cuda()
+        model.cuda()
     print(model)
 
     return model
