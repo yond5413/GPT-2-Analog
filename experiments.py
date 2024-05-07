@@ -84,7 +84,7 @@ if args.wandb:
                     "load":{"values":[False,True,True,True,True]} },
     }
 
-    SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project="gpt2-weight-noise-experiment")
+    SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project='GPT2-analog')#"gpt2-weight-noise-experiment")
 #############################
 def train(model,train,optimizer,epochs = 25):
     categories =['Sponsor', 'Big Tech & Startups', 'Science and Futuristic Technology',
