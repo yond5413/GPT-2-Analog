@@ -104,7 +104,7 @@ def train(model,train,optimizer,epochs = 25):
             gt = torch.tensor(sample['target']).to(device)
             print(pred)
             print(gt)
-            loss = F.cross_entropy(pred, gt)
+            loss = F.mse_loss(pred,gt)#F.cross_entropy(pred, gt)
             total_loss += loss.item()
             # Backpropagation
             loss.backward()
