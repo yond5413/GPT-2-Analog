@@ -9,3 +9,4 @@ numpy
 mpl-scatter-density
 tensorboard
 tqdm
+scikit-learn

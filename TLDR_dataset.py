@@ -6,6 +6,7 @@ import wandb
 from transformers import AutoTokenizer
 from tqdm import tqdm
 import torch
+from sklearn.metrics import f1_score
 ########
 '''
 File manages datasets for benchmarks
@@ -79,8 +80,13 @@ def postprocess_predictions(examples, features, raw_predictions,):
         predictions.append(predicted_label)
         #predicted_class.append(predicted_class_idx)
     return predictions
-
-
+def exact_match(pred,gt):
+    ret = 0.0
+    for i in range(len(pred)):
+        if pred[i] == gt[i]:
+            ret+=1.0
+    ret /= len(pred)
+    return ret
 def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6, n_times=9):
     """Perform inference experiment at weight noise level specified at runtime.
     SQuAD exact match and f1 metrics are captured in Tensorboard
@@ -108,9 +114,19 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
             # Format to list of dicts instead of a large dict
             #formatted_preds = [{"headline": k, "prediction": v} for k, v in predictions.items()]
         formatted_preds = pred
-        out_metric = metric.compute(predictions=formatted_preds, references=ground_truth)
+        #out_metric = metric.compute(predictions=formatted_preds, references=ground_truth)
+        micro_f1 = f1_score(ground_truth, formatted_preds, average='micro')
 
-        return out_metric["f1"], out_metric["exact_match"]
+        # Compute macro F1 score
+        macro_f1 = f1_score(ground_truth, formatted_preds, average='macro')
+
+        # Compute weighted F1 score
+        weighted_f1 = f1_score(ground_truth, formatted_preds, average='weighted')
+
+        exact_match = exact_match(formatted_preds,ground_truth)
+
+        return micro_f1,macro_f1,weighted_f1,exact_match
+        #return out_metric["f1"], out_metric["exact_match"]
 
     def write_metrics(f1, exact_match, t_inference):
         # Add information to tensorboard
@@ -124,7 +140,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
 
     model.eval()
 
-    metric = load("squad")
+    #metric = load("squad")
 
     ground_truth = [row['category'] for row in squad["validation"]]
     #ground_truth = [{"id": ex["id"], "answers": ex["answers"]} for ex in squad["validation"]]
