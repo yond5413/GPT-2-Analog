@@ -3,6 +3,7 @@ from evaluate import load
 from collections import OrderedDict, defaultdict
 import numpy as np
 import wandb
+from datasets import Dataset
 from transformers import AutoTokenizer
 ########
 '''
@@ -166,6 +167,10 @@ def race_inference(model, trainer, squad, eval_data, writer, max_inference_time=
         # Perform inference + evaluate metric here
         print("about to predict")
         print(eval_data)
+        pred_eval_data = Dataset.from_dict({
+            'input_ids': eval_data['input_ids'],
+            'attention_mask': eval_data['attention_mask']
+        })
         raw_predictions = trainer.predict(eval_data)
         print("did we do it?????")
         predictions = postprocess_predictions(
