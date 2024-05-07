@@ -135,6 +135,7 @@ def make_writer():
 def main():
     if wandb:
         print('calma')
+        print(wandb.config)
         print(wandb.config.modifier_noise)
         args.digital = wandb.config.digital
         args.load = wandb.config.load
@@ -172,6 +173,6 @@ def main():
 if __name__ == "__main__":
     if args.wandb:
         wandb.init()
-        wandb.agent(SWEEP_ID, function=main, count=5)
+        wandb.agent(SWEEP_ID, function=main, count=1)
     else:
         main()
