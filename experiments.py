@@ -94,25 +94,26 @@ def train(model,train,optimizer,epochs = 25):
         progress_bar = tqdm(total=len(train))
         for sample in train:       
             #raw_predictions = trainer.predict(eval_data)
-            optimizer.zero_grad()
+            model.zero_grad()
             input_ids = tokenizer(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
             input_ids.to(device)
             ###################
             outputs = model(**input_ids)
-            logits = outputs
+            loss,logits = outputs
+            print(outputs)
             probs = F.softmax(logits, dim=1)
-            labels = torch.tensor(sample['target']).to(device)
+            gt = sample['target']
             #print(logits)
             pred = torch.argmax(probs, dim=1)
             #print(labels)
-            loss = F.cross_entropy(pred, labels)
-
+            #loss = F.cross_entropy(pred, labels)
+            total_loss += loss.item()
             # Backpropagation
             loss.backward()
             optimizer.step()
 
             # Update progress bar and total loss
-            total_loss += loss.item()
+            
             progress_bar.update(1)
         print(f"Epoch {i}, Average Loss: {total_loss / len(train)}")
         #for j in range(train):
