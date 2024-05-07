@@ -78,7 +78,7 @@ if args.wandb:
 
     SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project="gpt2-weight-noise-experiment")
 #############################
-def train(model,train,epochs = 3):
+def train(model,train,optimizer,epochs = 3):
     model.train()
     for i in range(0,epochd):
         for j in range(train):
@@ -138,11 +138,12 @@ def main():
     if args.train_hwa and not args.digital and not args.load:
         print("Hardware aware training.......")
         #trainer.train()
+        #train(model,train_set,optimizer)
         torch_save(model.state_dict(), args.checkpoint)
    
     print("TLDF dataset inference......")
     #tldr_inference(args,model, trainer, init_dataset, eval_data, writer)
-    tldr_inference(args,model,init_dataset, val, writer)
+    tldr_inference(args,model,init_dataset, val_set, writer)
 if __name__ == "__main__":
     if args.wandb:
         wandb.agent(SWEEP_ID, function=main, count=4)
