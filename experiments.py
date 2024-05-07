@@ -99,7 +99,7 @@ def train(model,train,optimizer,epochs = 25):
             input_ids.to(device)
             ###################
             outputs = model(**input_ids)
-            loss,logits = outputs
+            loss,logits = outputs[:5]
             print(outputs)
             probs = F.softmax(logits, dim=1)
             gt = sample['target']
