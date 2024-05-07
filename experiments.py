@@ -83,8 +83,10 @@ if args.wandb:
                   "digital":{"values":[True,False,False,False,False]},
                     "load":{"values":[False,True,True,True,True]} }
     }
-
+    print(SWEEP_CONFIG)
+    
     SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project='GPT2-analog')#"gpt2-weight-noise-experiment")
+    print(SWEEP_ID)
 #############################
 def train(model,train,optimizer,epochs = 25):
     categories =['Sponsor', 'Big Tech & Startups', 'Science and Futuristic Technology',
@@ -134,6 +136,7 @@ def make_writer():
 
 def main():
     if wandb:
+        wandb.init()
         print('calma')
         print(wandb.config)
         #print(wandb.config.modifier_noise)
@@ -172,7 +175,7 @@ def main():
     tldr_inference(args,model,init_dataset, val_set, writer)
 if __name__ == "__main__":
     if args.wandb:
-        wandb.init()
+        #wandb.init()
         wandb.agent(SWEEP_ID, function=main, count=1)
     else:
         main()
