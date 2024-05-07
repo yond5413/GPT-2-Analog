@@ -120,8 +120,6 @@ def make_writer():#make_trainer(model, optimizer, tokenized_data):
     return writer
     #return trainer, writer
 def main():
-    if args.wandb:
-        wandb.init()
     num_classes = 5
     init_dataset, train_set, val_set = load_tldr()
     
@@ -153,6 +151,9 @@ def main():
     tldr_inference(args,model,init_dataset, val_set, writer)
 if __name__ == "__main__":
     if args.wandb:
+        print("wandb")
+        wandb.init()
         wandb.agent(SWEEP_ID, function=main, count=4)
     else:
+        print('freedom')
         main()
