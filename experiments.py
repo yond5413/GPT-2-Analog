@@ -99,14 +99,10 @@ def train(model,train,optimizer,epochs = 25):
             input_ids.to(device)
             ###################
             outputs = model(**input_ids)
-            loss,logits = outputs[:5]
-            print(outputs)
-            probs = F.softmax(logits, dim=1)
+            predicted_index = torch.argmax(outputs.logits)
+            pred = predicted_index
             gt = sample['target']
-            #print(logits)
-            pred = torch.argmax(probs, dim=1)
-            #print(labels)
-            #loss = F.cross_entropy(pred, labels)
+            loss = F.cross_entropy(pred, gt)
             total_loss += loss.item()
             # Backpropagation
             loss.backward()
