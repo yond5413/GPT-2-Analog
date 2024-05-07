@@ -47,9 +47,9 @@ def preprocess_train(dataset):
     ret = []
     for i in range(len(dataset)):
         curr = {}
-        prompt = f"headline: {dataset[i]['headline']} \n context:{dataset[i]['headline']} "
+        prompt = f"headline: {dataset['headline'][i]} \n context:{dataset['headline'][i]} "
     #tokenized_dataset = TOKENIZER(prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
-        category = dataset[i]['category']
+        category = dataset['category'][i]
         print(category)
         curr['prompt'] = prompt
         curr['target']  = labels[category]
