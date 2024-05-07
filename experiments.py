@@ -140,8 +140,8 @@ def main():
         print('calma')
         print(wandb.config)
         #print(wandb.config.modifier_noise)
-        #args.digital = wandb.config.digital
-        #args.load = wandb.config.load
+        args.digital = wandb.config.digital
+        args.load = wandb.config.load
         print(f"digital: {args.digital}")
         print(f"loading:{args.load}")
     num_classes = 5
