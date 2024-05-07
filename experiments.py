@@ -102,6 +102,8 @@ def train(model,train,optimizer,epochs = 25):
             predicted_index = torch.argmax(outputs.logits)
             pred = predicted_index
             gt = sample['target']
+            print(pred)
+            print(gt)
             loss = F.cross_entropy(pred, gt)
             total_loss += loss.item()
             # Backpropagation
