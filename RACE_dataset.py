@@ -171,7 +171,7 @@ def race_inference(model, trainer, squad, eval_data, writer, max_inference_time=
             'input_ids': eval_data['input_ids'],
             'attention_mask': eval_data['attention_mask']
         })
-        raw_predictions = trainer.predict(eval_data)
+        raw_predictions = trainer.predict(pred_eval_data)#trainer.predict(eval_data)
         print("did we do it?????")
         predictions = postprocess_predictions(
             squad["validation"], eval_data, raw_predictions.predictions
