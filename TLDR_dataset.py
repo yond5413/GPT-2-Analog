@@ -52,17 +52,23 @@ def preprocess_train(dataset):
         category = dataset['category'][i]
         print(f'category:{category}, label:{labels[category]}')
         curr['prompt'] = prompt
-        curr['target']  = labels[category]
+        curr['target']  = category#labels[category]
         ret.append(curr)
     return ret #tokenized_dataset
 
 def preprocess_validation(dataset):
     """Preprocess the validation set"""
-    prompt = f"headline: {dataset['headline']} \n context:{dataset['headline']} "
-    tokenized_dataset = TOKENIZER(prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
-    category = dataset['category']
-    tokenized_dataset['target'] = labels[category]
-    return tokenized_dataset
+    ret = []
+    for i in range(len(dataset)):
+        curr = {}
+        prompt = f"headline: {dataset['headline'][i]} \n context:{dataset['headline'][i]} "
+    #tokenized_dataset = TOKENIZER(prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
+        category = dataset['category'][i]
+        print(f'category:{category}, label:{labels[category]}')
+        curr['prompt'] = prompt
+        curr['target']  = category#labels[category]
+        ret.append(curr)
+    return ret #
 
 def postprocess_predictions(examples, features, raw_predictions,):
     #features.set_format(type=features.format["type"], columns=list(features.features.keys()))
