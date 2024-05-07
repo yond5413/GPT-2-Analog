@@ -101,7 +101,7 @@ def train(model,train,optimizer,epochs = 25):
             outputs = model(**input_ids)
             predicted_index = torch.argmax(outputs.logits)
             pred = predicted_index
-            gt = sample['target']
+            gt = torch.tensor(sample['target']).to(device)
             print(pred)
             print(gt)
             loss = F.cross_entropy(pred, gt)
