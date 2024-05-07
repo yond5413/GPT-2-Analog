@@ -102,6 +102,9 @@ def train(model,train,optimizer,epochs = 25):
             predicted_index = torch.argmax(outputs.logits)
             pred = predicted_index.to(torch.float32)
             gt = torch.tensor(sample['target'],dtype=torch.float32).to(device)
+            
+            gt.requires_grad_(True)
+            pred.requires_grad_(True)
             print(pred)
             print(gt)
             loss = F.mse_loss(pred,gt)#F.cross_entropy(pred, gt)
