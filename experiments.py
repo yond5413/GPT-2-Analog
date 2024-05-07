@@ -137,8 +137,7 @@ def make_writer():
 def main():
     if wandb:
         wandb.init()
-        print('calma')
-        print(wandb.config)
+        #print(wandb.config)
         #print(wandb.config.modifier_noise)
         args.digital = wandb.config.digital
         args.load = wandb.config.load
@@ -156,7 +155,7 @@ def main():
     --> setup for correct inference function for the dataset being used
     '''
     if args.load:
-        print(f"Load model from '{args.checkpoint}'.")
+        print(f"Loading model from '{args.checkpoint}'.")
         model.load_state_dict(torch_load(args.checkpoint))
 
     # Do hw-aware training if in analog domain and the model isn't loaded from

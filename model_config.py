@@ -43,6 +43,7 @@ def create_rpu_config(ARGS,modifier_noise, tile_size=512, dac_res=256, adc_res=2
     """Create RPU Config emulated typical PCM Device"""
     if ARGS.wandb:
         print(modifier_noise)
+        wandb.init()
         modifier_noise = wandb.config.modifier_noise
         print("wb is everywhere you go")
         print(modifier_noise)
