@@ -164,11 +164,12 @@ def main():
     tldr_inference(args,model,init_dataset, val_set, writer)
 if __name__ == "__main__":
     if args.wandb:
+        wandb.init()
         args.digital = wandb.config.digital
         args.load = wandb.config.load
         print(f"digital: {args.digital}")
         print(f"loading:{args.load}")
-        wandb.init()
+       
         wandb.agent(SWEEP_ID, function=main, count=1)
     else:
         main()
