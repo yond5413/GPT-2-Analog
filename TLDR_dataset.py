@@ -127,33 +127,31 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
         em = exact_match(formatted_preds,ground_truth)
 
         return micro_f1,macro_f1,weighted_f1,em
-        #return out_metric["f1"], out_metric["exact_match"]
 
-    def write_metrics(f1, exact_match, t_inference):
+    def write_metrics( micro_f1,macro_f1,weighted_f1,em, t_inference):
         # Add information to tensorboard
-        writer.add_scalar("val/f1", f1, t_inference)
-        writer.add_scalar("val/exact_match", exact_match, t_inference)
-
+        writer.add_scalar("val/micro_f1", micro_f1, t_inference)
+        writer.add_scalar("val/macro_f1", macro_f1, t_inference)
+        writer.add_scalar("val/weighted_f1", weighted_f1, t_inference)
+        writer.add_scalar("val/exact_match", em, t_inference)
         if ARGS.wandb:
-            wandb.log({"t_inference": t_inference, "f1": f1, "exact_match": exact_match})
+            wandb.log({"t_inference": t_inference, "micro_f1": micro_f1, "macro_f1":macro_f1,
+                       "weighted_f1":weighted_f1,"exact_match": exact_match})
 
-        print(f"Exact match: {exact_match: .2f}\t" f"F1: {f1: .2f}\t" f"Drift: {t_inference: .2e}")
-
+        print(f"Exact match: {em: .2f}\t" f"Micro F1: {micro_f1: .2f}\t" f"Drift: {t_inference: .2e}")
+        print(f"Macro F1: {macro_f1: .2f}\t" f"Weighted F1: {weighted_f1: .2f}\t")
     model.eval()
 
-    #metric = load("squad")
-
     ground_truth = [row['category'] for row in squad["validation"]]
-    #ground_truth = [{"id": ex["id"], "answers": ex["answers"]} for ex in squad["validation"]]
-
+    
     t_inference_list = np.logspace(0, np.log10(float(max_inference_time)), n_times).tolist()
 
     # Get the initial metrics
-    f1, exact_match = predict()
-    write_metrics(f1, exact_match, 0.0)
+    micro_f1,macro_f1,weighted_f1,em = predict()
+    write_metrics(micro_f1,macro_f1,weighted_f1,em,0.0)
 
     for t_inference in t_inference_list:
         model.drift_analog_weights(t_inference)
         f1, exact_match = predict()
-        write_metrics(f1, exact_match, t_inference)
+        write_metrics( micro_f1,macro_f1,weighted_f1,em,t_inference)
 
