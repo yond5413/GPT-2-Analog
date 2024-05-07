@@ -28,14 +28,15 @@ def load_tldr():
     ##############################
     # Preprocessing changes number of samples, so we need to remove some columns so
     # the data updates properly
-    tokenized_data = tldr.map(
-        preprocess_train, batched=True, remove_columns=tldr["train"].column_names
-    )
-    eval_data = tldr["validation"].map(
-        preprocess_validation, batched=True, remove_columns=tldr["validation"].column_names
-    )
-
-    return tldr, tokenized_data, eval_data
+    #tokenized_data = tldr.map(
+     #   preprocess_train, batched=True, remove_columns=tldr["train"].column_names
+    #)
+    #eval_data = tldr["validation"].map(
+    #    preprocess_validation, batched=True, remove_columns=tldr["validation"].column_names
+    #)
+    train_set= preprocess_train(tldr['train'])
+    val_set = preprocess_train(tldr['validation'])
+    return tldr, train_set,val_set#tokenized_data, eval_data
 ###########################################################################
 def preprocess_train(dataset):
     """Preprocess the training dataset"""
@@ -45,22 +46,6 @@ def preprocess_train(dataset):
     ## dataset["question"] = [q.lstrip() for q in dataset["question"]] 
     ## ex for preprocessing---->
     ret = {}
-
-    #curr = {}
-    prompt = f"headline: {dataset['headline']} \n context:{dataset['headline']} "
-#tokenized_dataset = TOKENIZER(prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
-    category = dataset['category']#[i]
-    print(f'category:{category}, label:{labels[category]}')
-    ret['prompt'] = prompt
-    ret['target']  = category#labels[category]
-    #curr['prompt'] = prompt
-    #curr['target']  = category#labels[category]
-    #ret[i] = curr
-    return ret #tokenized_dataset
-
-def preprocess_validation(dataset):
-    """Preprocess the validation set"""
-    ret = {}
     for i in range(len(dataset)):
         curr = {}
         prompt = f"headline: {dataset['headline'][i]} \n context:{dataset['headline'][i]} "
@@ -69,8 +54,9 @@ def preprocess_validation(dataset):
         print(f'category:{category}, label:{labels[category]}')
         curr['prompt'] = prompt
         curr['target']  = category#labels[category]
-        ret[i]= curr
-    return ret #
+        ret[i] = curr
+    return ret 
+
 
 def postprocess_predictions(examples, features, raw_predictions,):
     #features.set_format(type=features.format["type"], columns=list(features.features.keys()))
