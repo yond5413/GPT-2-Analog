@@ -99,11 +99,13 @@ def train(model,train,optimizer,epochs = 25):
             input_ids.to(device)
             ###################
             outputs = model(**input_ids)
-            logits = outputs.logits
+            logits = outputs
+            probs = F.softmax(logits, dim=1)
             labels = torch.tensor(sample['target']).to(device)
-            print(logits)
-            print(labels)
-            loss = F.cross_entropy(logits, labels)
+            #print(logits)
+            pred = torch.argmax(probs, dim=1)
+            #print(labels)
+            loss = F.cross_entropy(pred, labels)
 
             # Backpropagation
             loss.backward()
