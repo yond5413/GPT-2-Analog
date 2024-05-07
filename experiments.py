@@ -62,9 +62,9 @@ PARSER.add_argument(
 PARSER.add_argument(
     "-l", "--learning_rate", help="Learning rate for training", default=2e-4, type=float
 )
-PARSER.add_argument(
+'''PARSER.add_argument(
     "-ds","--dataset",help="dataset flag (0/1) for TLDR or RACE",default=0,type=int
-)
+)'''
 args = PARSER.parse_args()
 #############################
 ### seting up wandb ie weights and biases 
@@ -142,14 +142,9 @@ def main():
         print("Hardware aware training.......")
         trainer.train()
         torch_save(model.state_dict(), args.checkpoint)
-    if args.dataset ==0:
-        print(f"arg.digital:{args.digital}")
-        print(f"arg.train_hwa:{args.train_hwa}")
-        print("RACE dataset inference......")
-        race_inference(args,model, trainer, init_dataset, eval_data, writer)
-    elif args.dataset ==1:
-        print("TLDF dataset inference......")
-        tldr_inference(model, trainer, init_dataset, eval_data, writer)
+   
+    print("TLDF dataset inference......")
+    tldr_inference(args,model, trainer, init_dataset, eval_data, writer)
 
 if __name__ == "__main__":
     if args.wandb:

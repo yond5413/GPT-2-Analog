@@ -44,11 +44,17 @@ def preprocess_train(dataset):
     '''
     ## dataset["question"] = [q.lstrip() for q in dataset["question"]] 
     ## ex for preprocessing---->
-    prompt = f"headline: {dataset['headline']} \n context:{dataset['headline']} "
-    tokenized_dataset = TOKENIZER(prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
-    category = dataset['category']
-    tokenized_dataset['target'] = labels[category]
-    return tokenized_dataset
+    ret = []
+    for i in range(len(dataset)):
+        curr = {}
+        prompt = f"headline: {dataset[i]['headline']} \n context:{dataset[i]['headline']} "
+    #tokenized_dataset = TOKENIZER(prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
+        category = dataset[i]['category']
+        print(category)
+        curr['prompt'] = prompt
+        curr['target']  = labels[category]
+        ret.append(curr)
+    return #tokenized_dataset
 
 def preprocess_validation(dataset):
     """Preprocess the validation set"""
@@ -76,7 +82,7 @@ def postprocess_predictions(examples, features, raw_predictions,):
     return predictions
 
 
-def tldr_inference(model, trainer, squad, eval_data, writer, max_inference_time=1e6, n_times=9,wandb_used = True):
+def tldr_inference(ARGS,model, trainer, squad, eval_data, writer, max_inference_time=1e6, n_times=9,wandb_used = True):
     """Perform inference experiment at weight noise level specified at runtime.
     SQuAD exact match and f1 metrics are captured in Tensorboard
     """
@@ -101,7 +107,7 @@ def tldr_inference(model, trainer, squad, eval_data, writer, max_inference_time=
         writer.add_scalar("val/f1", f1, t_inference)
         writer.add_scalar("val/exact_match", exact_match, t_inference)
 
-        if wandb_used:#if ARGS.wandb:## TODO to param update
+        if ARGS.wandb:## TODO to param update
             wandb.log({"t_inference": t_inference, "f1": f1, "exact_match": exact_match})
 
         print(f"Exact match: {exact_match: .2f}\t" f"F1: {f1: .2f}\t" f"Drift: {t_inference: .2e}")
