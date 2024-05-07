@@ -144,6 +144,7 @@ def main():
         torch_save(model.state_dict(), args.checkpoint)
     if args.dataset ==0:
         print(f"arg.digital:{args.digital}")
+        print(f"arg.train_hwa:{args.train_hwa}")
         print("RACE dataset inference......")
         race_inference(args,model, trainer, init_dataset, eval_data, writer)
     elif args.dataset ==1:
