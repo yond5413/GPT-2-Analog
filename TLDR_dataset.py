@@ -16,7 +16,7 @@ DOC_STRIDE = 128
 # -> source
 categories =['Sponsor', 'Big Tech & Startups', 'Science and Futuristic Technology',
                            'Programming, Design & Data Science', 'Miscellaneous']
-labels = {categories[i]:i for i in range(len(categories))}
+labels = {i:categories[i] for i in range(len(categories))}
 TOKENIZER = AutoTokenizer.from_pretrained("gpt2")#GPT2Model.from_pretrained(MODEL_NAME)
 def load_tldr():
     """Load the SQuAD dataset, the tokenized version, and the validation set"""
@@ -50,7 +50,7 @@ def preprocess_train(dataset):
         prompt = f"headline: {dataset['headline'][i]} \n context:{dataset['headline'][i]} "
     #tokenized_dataset = TOKENIZER(prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
         category = dataset['category'][i]
-        print(category)
+        print(f'category:{category}, label:{labels[category]}')
         curr['prompt'] = prompt
         curr['target']  = labels[category]
         ret.append(curr)
