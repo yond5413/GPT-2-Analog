@@ -54,7 +54,7 @@ PARSER.add_argument(
 )
 PARSER.add_argument("-t", "--train_hwa", help="Use Hardware-Aware training",type = bool, default= True)# action="store_true")
 PARSER.add_argument(
-    "-L", "--load", help="Use when loading from training checkpoint", type = bool, default= True#action="store_true"
+    "-L", "--load", help="Use when loading from training checkpoint", type = bool, default= False#True#action="store_true"
 )
 
 PARSER.add_argument(
@@ -84,7 +84,7 @@ if args.wandb:
 
     SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project="gpt2-weight-noise-experiment")
 #############################
-def train(model,train,optimizer,epochs = 3):
+def train(model,train,optimizer,epochs = 25):
     model.train()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -153,7 +153,7 @@ if __name__ == "__main__":
     if args.wandb:
         print("wandb")
         wandb.init()
-        wandb.agent(SWEEP_ID, function=main, count=4)
+        wandb.agent(SWEEP_ID, function=main, count=1)
     else:
         print('freedom')
         main()
