@@ -127,6 +127,7 @@ def train(model,train,optimizer,epochs = 25):
             gt.requires_grad_(True)
             pred.requires_grad_(True)
             total_loss += loss.item()
+            loss.requires_grad_(True)
             # Backpropagation
             loss.backward()
             optimizer.step()
