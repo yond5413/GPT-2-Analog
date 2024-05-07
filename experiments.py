@@ -133,6 +133,13 @@ def make_writer():
     return writer
 
 def main():
+    if wandb:
+        print('calma')
+        print(wandb.config.modifier_noise)
+        args.digital = wandb.config.digital
+        args.load = wandb.config.load
+        print(f"digital: {args.digital}")
+        print(f"loading:{args.load}")
     num_classes = 5
     init_dataset, train_set, val_set = load_tldr()
     
@@ -165,12 +172,6 @@ def main():
 if __name__ == "__main__":
     if args.wandb:
         wandb.init()
-        print(wandb.config.modifier_noise)
-        args.digital = wandb.config.digital
-        args.load = wandb.config.load
-        print(f"digital: {args.digital}")
-        print(f"loading:{args.load}")
-       
         wandb.agent(SWEEP_ID, function=main, count=1)
     else:
         main()
