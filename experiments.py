@@ -146,7 +146,7 @@ def main():
         wandb.init()
         #print(wandb.config)
         #print(wandb.config.modifier_noise)
-        args.digital = wandb.config.digital
+        #args.digital = wandb.config.digital
         #args.load = wandb.config.load
         print(f"digital: {args.digital}")
         print(f"loading:{args.load}")
