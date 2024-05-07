@@ -8,3 +8,4 @@ matplotlib
 numpy
 mpl-scatter-density
 tensorboard
+tqdm

@@ -4,6 +4,7 @@ from collections import OrderedDict, defaultdict
 import numpy as np
 import wandb
 from transformers import AutoTokenizer
+from tqdm import tqdm
 ########
 '''
 File manages datasets for benchmarks
@@ -46,6 +47,7 @@ def preprocess_train(dataset):
     ## dataset["question"] = [q.lstrip() for q in dataset["question"]] 
     ## ex for preprocessing---->
     ret = {}
+    progress_bar = tqdm(total=len(dataset))
     for i in range(len(dataset)):
         curr = {}
         prompt = f"headline: {dataset['headline'][i]} \n context:{dataset['headline'][i]} "
@@ -55,6 +57,7 @@ def preprocess_train(dataset):
         curr['prompt'] = prompt
         curr['target']  = category#labels[category]
         ret[i] = curr
+        progress_bar.update(1)
     return ret 
 
 
