@@ -19,6 +19,9 @@ from transformers.integrations import TensorBoardCallback
 ###########################################################
 import wandb
 from model_config import get_model,create_optimizer
+from tqdm import tqdm
+import torch
+import torch.nn.functional as F
 #MODEL_NAME = "gpt2"#openai-community/gpt2
 MODEL_NAME = "gpt2"
 #tokenizer = GPT2Tokenizer.from_pretrained(MODEL_NAME)
@@ -29,6 +32,8 @@ tokenizer.pad_token = tokenizer.eos_token
 tokenizer.add_special_tokens({'pad_token': '[PAD]'})
 #############################
 # cli parser
+MAX_LENGTH = 1000#320
+DOC_STRIDE = 128
 PARSER = ArgumentParser("Analog GPT-2")
 PARSER.add_argument("-d", "--digital", help="Add to use digital inference", type = bool, default= True)
 PARSER.add_argument(
@@ -80,10 +85,34 @@ if args.wandb:
 #############################
 def train(model,train,optimizer,epochs = 3):
     model.train()
-    for i in range(0,epochd):
-        for j in range(train):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    for i in range(0,epochs):
+        print(f"Epoch: {i}")
+        total_loss = 0.0
+        progress_bar = tqdm(total=len(train))
+        for sample in train:       
+            #raw_predictions = trainer.predict(eval_data)
+            optimizer.zero_grad()
+            input_ids = tokenizer(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
+            input_ids.to(device)
+            ###################
+            outputs = model(**input_ids)
+            logits = outputs
+            labels = torch.tensor(sample['labels']).to(device)
+            loss = F.cross_entropy(logits, labels)
+
+            # Backpropagation
+            loss.backward()
+            optimizer.step()
+
+            # Update progress bar and total loss
+            total_loss += loss.item()
+            progress_bar.update(1)
+        print(f"Epoch {i}, Average Loss: {total_loss / len(train)}")
+        #for j in range(train):
             # finetuning
-            pass
+            #pass
 def make_writer():#make_trainer(model, optimizer, tokenized_data):
     """Create the Huggingface Trainer"""
     '''training_args = TrainingArguments(

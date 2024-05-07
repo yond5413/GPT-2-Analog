@@ -13,7 +13,7 @@ File manages datasets for benchmarks
 queried from Hugging Face API
 '''
 ########
-MAX_LENGTH = 320
+MAX_LENGTH = 1000#320
 DOC_STRIDE = 128
 #constants
 # -> source
@@ -149,9 +149,11 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
     # Get the initial metrics
     micro_f1,macro_f1,weighted_f1,em = predict()
     write_metrics(micro_f1,macro_f1,weighted_f1,em,0.0)
-
-    for t_inference in t_inference_list:
-        model.drift_analog_weights(t_inference)
-        f1, exact_match = predict()
-        write_metrics( micro_f1,macro_f1,weighted_f1,em,t_inference)
+    if not ARGS.digital:
+        for t_inference in t_inference_list:
+            model.drift_analog_weights(t_inference)
+            f1, exact_match = predict()
+            write_metrics( micro_f1,macro_f1,weighted_f1,em,t_inference)
+    else:
+        print("Not analog just GPT-2 baseline")
 
