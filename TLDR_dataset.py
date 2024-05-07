@@ -104,16 +104,13 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
             input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
             input_ids.to(device)
             with torch.no_grad():
-                outputs = model(**input_ids)
+                outputs = model(*input_ids)
+                logits = outputs.logits
+            print(logits.size)
             predicted_index = torch.argmax(outputs.logits)
             pred.append(predicted_index.item())
             progress_bar.update(1)
-            #predictions = postprocess_predictions(
-            #    squad["validation"], eval_data, raw_predictions.predictions
-            #)
-
-            # Format to list of dicts instead of a large dict
-            #formatted_preds = [{"headline": k, "prediction": v} for k, v in predictions.items()]
+            
         formatted_preds = pred
         #out_metric = metric.compute(predictions=formatted_preds, references=ground_truth)
         micro_f1 = f1_score(ground_truth, formatted_preds, average='micro')
@@ -152,7 +149,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
     if not ARGS.digital:
         for t_inference in t_inference_list:
             model.drift_analog_weights(t_inference)
-            f1, exact_match = predict()
+            micro_f1,macro_f1,weighted_f1,em = predict()
             write_metrics( micro_f1,macro_f1,weighted_f1,em,t_inference)
     else:
         print("Not analog just GPT-2 baseline")

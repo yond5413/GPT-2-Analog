@@ -16,7 +16,7 @@ from aihwkit.optim import AnalogSGD
 ################################################################
 from aihwkit.simulator.rpu_base import cuda
 #########
-from transformers import GPT2ForSequenceClassification
+from transformers import GPT2ForSequenceClassification, GPT2LMHeadModel
 import wandb
 
 MODEL_NAME = "gpt2"
@@ -81,7 +81,8 @@ def create_model(ARGS,rpu_config,num_classes):
     #model = AutoModelForCausalLM.pretra,ined(MODEL_NAME)#AutoModelForQuestionAnswering.from_pretrained(MODEL_NAME)
     #model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
     #GPT2ForSequenceClassification.from_pretrained(model_name, num_labels=num_classes)
-    model = GPT2ForSequenceClassification.from_pretrained(MODEL_NAME)
+    #model = GPT2ForSequenceClassification.from_pretrained(MODEL_NAME,num_classes)
+    model = GPT2LMHeadModel.from_pretrained(MODEL_NAME)
     if not ARGS.digital: 
         model = convert_to_analog(model, rpu_config)
         model.remap_analog_weights()

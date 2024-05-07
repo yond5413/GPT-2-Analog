@@ -79,7 +79,8 @@ if args.wandb:
         "method": "random",
         "name": "modifier noise sweep",
         "metric": {"goal": "maximize", "name": "exact_match"},
-        "parameters": {"modifier_noise": {"values": [0, 0.05, 0.1, 0.2]}},
+    "parameters": {"modifier_noise": {"values": [0,0, 0.05, 0.1, 0.2]},
+                  "digital":{True,False,False,False,False} },
     }
 
     SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project="gpt2-weight-noise-experiment")
@@ -148,18 +149,18 @@ def main():
         #trainer.train()
         #train(model,train_set,optimizer)
         torch_save(model.state_dict(), args.checkpoint)
-    if args.digital: #and not args.load:
-        print("default gpt-2 with finetuning")
-        train(model,train_set,optimizer)
-        torch_save(model.state_dict(), args.checkpoint)
+    #if args.digital: #and not args.load:
+    #    print("default gpt-2 with finetuning")
+    #    train(model,train_set,optimizer)
+   #     torch_save(model.state_dict(), args.checkpoint)
     print("TLDF dataset inference......")
     #tldr_inference(args,model, trainer, init_dataset, eval_data, writer)
     tldr_inference(args,model,init_dataset, val_set, writer)
 if __name__ == "__main__":
     if args.wandb:
-        print("wandb")
+        args.digital = wandb.config.digital
+        print(f"digital: {args.digital}")
         wandb.init()
         wandb.agent(SWEEP_ID, function=main, count=1)
     else:
-        print('freedom')
         main()
