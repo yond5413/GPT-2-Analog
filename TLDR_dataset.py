@@ -45,15 +45,17 @@ def preprocess_train(dataset):
     ## dataset["question"] = [q.lstrip() for q in dataset["question"]] 
     ## ex for preprocessing---->
     ret = {}
-    for i in range(len(dataset)):
-        curr = {}
-        prompt = f"headline: {dataset['headline'][i]} \n context:{dataset['headline'][i]} "
-    #tokenized_dataset = TOKENIZER(prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
-        category = dataset['category'][i]
-        print(f'category:{category}, label:{labels[category]}')
-        curr['prompt'] = prompt
-        curr['target']  = category#labels[category]
-        ret[i] = curr
+
+    #curr = {}
+    prompt = f"headline: {dataset['headline']} \n context:{dataset['headline']} "
+#tokenized_dataset = TOKENIZER(prompt,padding="max_length", stride=DOC_STRIDE,max_length=MAX_LENGTH,truncation=True)
+    category = dataset['category'][i]
+    print(f'category:{category}, label:{labels[category]}')
+    ret['prompt'] = prompt
+    ret['target']  = category#labels[category]
+    #curr['prompt'] = prompt
+    #curr['target']  = category#labels[category]
+    #ret[i] = curr
     return ret #tokenized_dataset
 
 def preprocess_validation(dataset):
