@@ -116,7 +116,7 @@ def main():
     num_classes = 5
     init_dataset, train, val = load_tldr()
     
-    model = get_model(args)
+    model = get_model(args,num_classes)
     optimizer = create_optimizer(model,args.learning_rate)
     #trainer,writer = make_trainer(model=model,optimizer=optimizer,tokenized_data=tokenized_data)
     writer = make_writer()
