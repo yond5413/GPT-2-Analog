@@ -91,7 +91,9 @@ def create_model(ARGS,rpu_config,num_classes):
         print("cuda compiled")
         model.cuda()
     print(model)
-
+    ##############3
+    print('for sanity')
+    print("Model device:", next(model.parameters()).device)
     return model
 
 def get_model(ARGS,num_classes):
