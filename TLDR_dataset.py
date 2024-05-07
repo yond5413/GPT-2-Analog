@@ -119,7 +119,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
                 toks_pred = input_ids[0].numel() - prompt_tok_count
                 
                 #input_ids.(device)
-                input_ids.to(device)
+                input_ids = input_ids.to(device)
                 # Synchronize
                 torch.cuda.synchronize()
                 print(toks_pred)
