@@ -118,7 +118,8 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
                 #input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
                 toks_pred = input_ids[0].numel() - prompt_tok_count
                 
-                input_ids.to(device)
+                #input_ids.(device)
+                input_ids.cuda()
                 # Synchronize
                 torch.cuda.synchronize()
                 print(toks_pred)
