@@ -123,9 +123,9 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
                 input_ids = input_ids.to(device)
                 # Synchronize
                 torch.cuda.synchronize()
-                print(toks_pred)
-                print(input_ids)
-                print("in_ids device:", input_ids.device)
+                #print(toks_pred)
+                #print(input_ids)
+                #print("in_ids device:", input_ids.device)
                 #with torch.no_grad():
                 outputs = model(*input_ids)
                 logits = outputs.logits
@@ -163,7 +163,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
         writer.add_scalar("val/exact_match", em, t_inference)
         if ARGS.wandb:
             wandb.log({"t_inference": t_inference, "micro_f1": micro_f1, "macro_f1":macro_f1,
-                       "weighted_f1":weighted_f1,"exact_match": exact_match})
+                       "weighted_f1":weighted_f1,"exact_match": em})
 
         print(f"Exact match: {em: .2f}\t" f"Micro F1: {micro_f1: .2f}\t" f"Drift: {t_inference: .2e}")
         print(f"Macro F1: {macro_f1: .2f}\t" f"Weighted F1: {weighted_f1: .2f}\t")

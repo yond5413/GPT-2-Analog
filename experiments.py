@@ -109,7 +109,9 @@ def train(model,train,optimizer,epochs = 25):
                 input_ids = tokenizer.encode(text, return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
                 #input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
                 toks_pred = input_ids[0].numel() - prompt_tok_count
-                input_ids.to(device)
+                input_ids = input_ids.to(device)
+                # Synchronize
+                torch.cuda.synchronize()
                 #with torch.no_grad():
                 outputs = model(*input_ids)
                 logits = outputs.logits
@@ -132,27 +134,6 @@ def train(model,train,optimizer,epochs = 25):
             # Update progress bar and total loss
             
             progress_bar.update(1)
-            ''' input_ids = tokenizer(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
-            input_ids.to(device)
-            ###################
-            outputs = model(**input_ids)
-            predicted_index = torch.argmax(outputs.logits)
-            pred = predicted_index.to(torch.float32)
-            gt = torch.tensor(sample['target'],dtype=torch.float32).to(device)
-            
-            gt.requires_grad_(True)
-            pred.requires_grad_(True)
-            #print(pred)
-            #print(gt)
-            loss = F.cross_entropy(pred, gt)#F.mse_loss(pred,gt)#F.cross_entropy(pred, gt)
-            total_loss += loss.item()
-            # Backpropagation
-            loss.backward()
-            optimizer.step()
-
-            # Update progress bar and total loss
-            
-            progress_bar.update(1)'''
         print(f"Epoch {i}, Average Loss: {total_loss / len(train)}")
         
 def make_writer():
