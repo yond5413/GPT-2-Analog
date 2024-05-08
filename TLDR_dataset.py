@@ -66,27 +66,15 @@ def preprocess_train(dataset):
     return ret 
 
 def postprocess_predictions(pred):
-    #features.set_format(type=features.format["type"], columns=list(features.features.keys()))
-    '''print(
-        f"Post-processing {len(examples)} example predictions "
-        f"split into {len(features)} features."
-    )
-    predictions = []#OrderedDict()
-    predicted_class = []
-    for val, logits in (features,raw_predictions):
-        # Take the argmax of the logits to get the predicted class index
-        predicted_class_idx = np.argmax(logits)
-        # Map the class index to the corresponding label
-        predicted_label = categories[predicted_class_idx]
-        predictions.append(predicted_label)
-        #predicted_class.append(predicted_class_idx)'''
+    
+    
     scores = np.array(pred)
     index = np.argmax(scores)
     return index#predictions
 
-def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6, n_times=9):
+def tldr_inference(ARGS,model, tldr, eval_data, writer, max_inference_time=1e6, n_times=9):
     """Perform inference experiment at weight noise level specified at runtime.
-    SQuAD exact match and f1 metrics are captured in Tensorboard
+    TLDR exact match and f1 metrics are captured in Tensorboard
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # Helper functions
@@ -97,6 +85,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
                 ret+=1.0
         ret /= len(pred)
         return ret
+    
     def predict():
         # Perform inference + evaluate metric here
         pred = []
@@ -118,8 +107,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
                 #input_ids = TOKENIZER(sample['prompt'], return_tensors="pt", max_length=MAX_LENGTH, truncation=True)
                 toks_pred = input_ids[0].numel() - prompt_tok_count
                 
-                #input_ids.(device)
-                #print(f"device is :{device}")
+                
                 input_ids = input_ids.to(device)
                 # Synchronize
                 torch.cuda.synchronize()
@@ -142,7 +130,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
             progress_bar.update(1)
             
         formatted_preds = pred
-        #out_metric = metric.compute(predictions=formatted_preds, references=ground_truth)
+        
         micro_f1 = f1_score(ground_truth, formatted_preds, average='micro')
 
         # Compute macro F1 score
@@ -169,7 +157,7 @@ def tldr_inference(ARGS,model, squad, eval_data, writer, max_inference_time=1e6,
         print(f"Macro F1: {macro_f1: .2f}\t" f"Weighted F1: {weighted_f1: .2f}\t")
     model.eval()
 
-    ground_truth = [row['category'] for row in squad["validation"]]
+    ground_truth = [row['category'] for row in tldr_inference["validation"]]
     
     t_inference_list = np.logspace(0, np.log10(float(max_inference_time)), n_times).tolist()
 

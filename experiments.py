@@ -81,8 +81,8 @@ if args.wandb:
         "name": "modifier noise sweep",
         "metric": {"goal": "maximize", "name": "exact_match"},
     "parameters": {"modifier_noise": {"values": [0,0, 0.05, 0.1, 0.2]}},
-                  #"digital":{"values":[True,False,False,False,False]},
-                  #  "load":{"values":[False,True,True,True,True]} }
+                  "digital":{"values":[True,False,False,False,False]},
+                    "load":{"values":[False,True,True,True,True]} 
     }
     
     SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project='GPT2-analog')#"gpt2-weight-noise-experiment")
@@ -147,10 +147,10 @@ def main():
         wandb.init()
         #print(wandb.config)
         #print(wandb.config.modifier_noise)
-        #args.digital = wandb.config.digital
-        #args.load = wandb.config.load
-        print(f"digital: {args.digital}")
-        print(f"loading:{args.load}")
+        args.digital = wandb.config.digital
+        args.load = wandb.config.load
+        #print(f"digital: {args.digital}")
+        #print(f"loading:{args.load}")
     num_classes = 5
     init_dataset, train_set, val_set = load_tldr()
     
@@ -158,10 +158,7 @@ def main():
     optimizer = create_optimizer(model,args.learning_rate)
     #trainer,writer = make_trainer(model=model,optimizer=optimizer,tokenized_data=tokenized_data)
     writer = make_writer()
-    '''
-    ->Change args to correct 
-    --> setup for correct inference function for the dataset being used
-    '''
+   
     if args.load:
         print(f"Loading model from '{args.checkpoint}'.")
         model.load_state_dict(torch_load(args.checkpoint))
@@ -169,10 +166,12 @@ def main():
     # Do hw-aware training if in analog domain and the model isn't loaded from
     # an existing checkpoint
     if args.train_hwa and not args.digital and not args.load:
-        print("Hardware aware training.......")
+        #print("Hardware aware training.......")
+        #### not implemented.......
         #trainer.train()
+        pass
         #train(model,train_set,optimizer)
-        torch_save(model.state_dict(), args.checkpoint)
+        #torch_save(model.state_dict(), args.checkpoint)
     if args.digital: #and not args.load:
         print("default gpt-2 with finetuning")
         train(model,train_set,optimizer)
