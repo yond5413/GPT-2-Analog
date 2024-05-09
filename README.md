@@ -5,7 +5,7 @@ To install of the dependencies run this command in your cli
 
 <code>pip install -r requirements.txt</code>
 
-To utilize cuda with the aihwkit please install these as well
+To utilize cuda with the aihwkit please install these as well!!
 
 <code>wget https://aihwkit-gpu-demo.s3.us-east.cloud-object-storage.appdomain.cloud/aihwkit-0.9.0+cuda117-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 </code>

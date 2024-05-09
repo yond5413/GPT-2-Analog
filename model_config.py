@@ -42,10 +42,11 @@ def create_ideal_rpu_config(tile_size=512):
 def create_rpu_config(ARGS,modifier_noise, tile_size=512, dac_res=256, adc_res=256):
     """Create RPU Config emulated typical PCM Device"""
     if ARGS.wandb:
-        print(modifier_noise)
         wandb.init()
         modifier_noise = wandb.config.modifier_noise
-        print("wb is everywhere you go")
+        '''
+        rpu_conf
+        '''
         print(modifier_noise)
     rpu_config = InferenceRPUConfig(
         clip=WeightClipParameter(type=WeightClipType.FIXED_VALUE, fixed_value=1.0),
@@ -76,13 +77,8 @@ def create_rpu_config(ARGS,modifier_noise, tile_size=512, dac_res=256, adc_res=2
     )
     return rpu_config
 #######################################################################
-def create_model(ARGS,rpu_config,num_classes):
+def create_model(ARGS,rpu_config):
     """Return Question Answering model and whether or not it was loaded from a checkpoint"""
-
-    #model = AutoModelForCausalLM.pretra,ined(MODEL_NAME)#AutoModelForQuestionAnswering.from_pretrained(MODEL_NAME)
-    #model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
-    #GPT2ForSequenceClassification.from_pretrained(model_name, num_labels=num_classes)
-    #model = GPT2ForSequenceClassification.from_pretrained(MODEL_NAME,num_classes)
     model = GPT2LMHeadModel.from_pretrained(MODEL_NAME)
     if not ARGS.digital: 
         model = convert_to_analog(model, rpu_config)
@@ -92,17 +88,17 @@ def create_model(ARGS,rpu_config,num_classes):
         model.cuda()
     print(model)
     ##############3
-    print('for sanity')
-    print("Model device:", next(model.parameters()).device)
+    #print('for sanity')
+    #print("Model device:", next(model.parameters()).device)
     return model
 
-def get_model(ARGS,num_classes):
+def get_model(ARGS):
     
     if ARGS.ideal:
         rpu_config = create_ideal_rpu_config()
     else:
         rpu_config = create_rpu_config(ARGS,modifier_noise=ARGS.noise)
-    model = create_model(ARGS,rpu_config,num_classes)
+    model = create_model(ARGS,rpu_config)
     return model
 def create_optimizer(model,learning_rate):
     """Create the analog-aware optimizer"""

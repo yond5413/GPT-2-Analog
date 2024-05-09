@@ -13,7 +13,7 @@ File manages datasets for benchmarks
 queried from Hugging Face API
 '''
 ########
-MAX_LENGTH = 1000#320
+MAX_LENGTH = 1000
 DOC_STRIDE = 128
 #constants
 # -> source
@@ -23,34 +23,25 @@ labels = {i:categories[i] for i in range(len(categories))}
 #TOKENIZER = AutoTokenizer.from_pretrained("gpt2")#GPT2Model.from_pretrained(MODEL_NAME)
 TOKENIZER =GPT2Tokenizer.from_pretrained('gpt2')
 def load_tldr():
-    """Load the SQuAD dataset, the tokenized version, and the validation set"""
+    """Load the TLDR dataset, the tokenized version, and the validation set"""
     tldr = load_dataset("JulesBelveze/tldr_news")
     ##############################
     tldr_val =tldr['test']
     tldr.pop('test')
     tldr['validation'] = tldr_val ## just for sake of naming convention in trainer function
     ##############################
-    # Preprocessing changes number of samples, so we need to remove some columns so
-    # the data updates properly
-    #tokenized_data = tldr.map(
-     #   preprocess_train, batched=True, remove_columns=tldr["train"].column_names
-    #)
-    #eval_data = tldr["validation"].map(
-    #    preprocess_validation, batched=True, remove_columns=tldr["validation"].column_names
-    #)
     print('Preprocessing Training set')
-    train_set= preprocess_train(tldr['train'])
+    train_set= preprocess_dataset(tldr['train'])
     print('Preprocessing Validation set')
-    val_set = preprocess_train(tldr['validation'])
+    val_set = preprocess_dataset(tldr['validation'])
     return tldr, train_set,val_set#tokenized_data, eval_data
 ###########################################################################
-def preprocess_train(dataset):
+def preprocess_dataset(dataset):
     """Preprocess the training dataset"""
     ##updates based off tldr
     '''-> headline, content, category
     '''
     ## dataset["question"] = [q.lstrip() for q in dataset["question"]] 
-    ## ex for preprocessing---->
     ret =[]
     progress_bar = tqdm(total=len(dataset))
     for i in range(len(dataset)):
@@ -66,8 +57,6 @@ def preprocess_train(dataset):
     return ret 
 
 def postprocess_predictions(pred):
-    
-    
     scores = np.array(pred)
     index = np.argmax(scores)
     return index#predictions
@@ -157,7 +146,7 @@ def tldr_inference(ARGS,model, tldr, eval_data, writer, max_inference_time=1e6, 
         print(f"Macro F1: {macro_f1: .2f}\t" f"Weighted F1: {weighted_f1: .2f}\t")
     model.eval()
 
-    ground_truth = [row['category'] for row in tldr_inference["validation"]]
+    ground_truth = [row['category'] for row in tldr["validation"]]
     
     t_inference_list = np.logspace(0, np.log10(float(max_inference_time)), n_times).tolist()
 

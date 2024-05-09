@@ -80,14 +80,15 @@ if args.wandb:
         "method": "random",
         "name": "modifier noise sweep",
         "metric": {"goal": "maximize", "name": "exact_match"},
-    "parameters": {"modifier_noise": {"values": [0,0, 0.05, 0.1, 0.2]}},
-                  "digital":{"values":[True,False,False,False,False]},
-                    "load":{"values":[False,True,True,True,True]} 
+    "parameters": {"modifier_noise": {"values": [0, 0.05, 0.1, 0.2]}},
+                  "digital":{"values":[True,False]},
+                    "load":{"values":[False,True]},
+                    "ideal":{"values":[False,True]} 
     }
     
     SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project='GPT2-analog')#"gpt2-weight-noise-experiment")
 #############################
-def train(model,train,optimizer,epochs = 25):
+def train(model,train,optimizer,epochs = 3):
     categories =['Sponsor', 'Big Tech & Startups', 'Science and Futuristic Technology',
                            'Programming, Design & Data Science', 'Miscellaneous']
     labels = {i:categories[i] for i in range(len(categories))}
@@ -112,7 +113,7 @@ def train(model,train,optimizer,epochs = 25):
                 input_ids = input_ids.to(device)
                 # Synchronize
                 torch.cuda.synchronize()
-                #with torch.no_grad():
+               
                 outputs = model(*input_ids)
                 logits = outputs.logits
                 probs = torch.softmax(logits,dim=-1)
@@ -131,15 +132,15 @@ def train(model,train,optimizer,epochs = 25):
             # Backpropagation
             loss.backward()
             optimizer.step()
-
-            # Update progress bar and total loss
             
             progress_bar.update(1)
         print(f"Epoch {i}, Average Loss: {total_loss / len(train)}")
         
 def make_writer():
-    log_dir = "logs/fit/" + args.run_name
+    f'with_noise_{args.noise}' 
+    log_dir = "logs/fit/" + args.run_name+f'with_noise_{args.noise}_ideal:{args.ideal}' 
     writer = SummaryWriter(log_dir=log_dir)
+    wandb.tensorboard.patch(root_logdir=log_dir)
     return writer
 
 def main():
@@ -149,14 +150,16 @@ def main():
         #print(wandb.config.modifier_noise)
         args.digital = wandb.config.digital
         args.load = wandb.config.load
+        args.ideal = wandb.config.ideal
+        args.noise = wandb.config.modifier_noise
         #print(f"digital: {args.digital}")
         #print(f"loading:{args.load}")
-    num_classes = 5
+    #num_classes = 5
     init_dataset, train_set, val_set = load_tldr()
     
-    model = get_model(args,num_classes)
+    model = get_model(args)#,num_classes)
     optimizer = create_optimizer(model,args.learning_rate)
-    #trainer,writer = make_trainer(model=model,optimizer=optimizer,tokenized_data=tokenized_data)
+   
     writer = make_writer()
    
     if args.load:
