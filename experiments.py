@@ -141,13 +141,14 @@ def make_writer():
     f'with_noise_{args.noise}' 
     log_dir = "logs/fit/" + args.run_name+f'with_noise_{args.noise}_ideal:{args.ideal}' 
     writer = SummaryWriter(log_dir=log_dir)
-    wandb.tensorboard.patch(root_logdir=log_dir,save=True)
-    return writer
+    #wandb.tensorboard.patch(root_logdir=log_dir,save=True)
+    return writer,log_dir
 
 def main():
     if wandb:
-        wandb.init(sync_tensorboard=False)
-        print(wandb.config)
+        writer,log_dir = make_writer()
+        wandb.init()#sync_tensorboard=False)
+        
         #print(wandb.config.modifier_noise)
         args.digital = wandb.config.digital
         args.load = wandb.config.load
@@ -161,7 +162,7 @@ def main():
     model = get_model(args)#,num_classes)
     optimizer = create_optimizer(model,args.learning_rate)
    
-    writer = make_writer()
+    #writer = make_writer()
    
     if args.load:
         print(f"Loading model from '{args.checkpoint}'.")
