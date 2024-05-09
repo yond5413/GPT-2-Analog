@@ -152,7 +152,7 @@ def main():
         
         #print(wandb.config.modifier_noise)
         args.digital = wandb.config.digital
-        args.load = wandb.config.load
+        #args.load = wandb.config.load
         args.ideal = wandb.config.ideal
         args.noise = wandb.config.modifier_noise
         #print(f"digital: {args.digital}")
