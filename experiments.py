@@ -170,12 +170,13 @@ def main():
     # Do hw-aware training if in analog domain and the model isn't loaded from
     # an existing checkpoint
     if args.train_hwa and not args.digital and not args.load:
-        #print("Hardware aware training.......")
+        print("Hardware aware training.......")
+        train(model,train_set,optimizer)
         #### not implemented.......
         #trainer.train()
         pass
         #train(model,train_set,optimizer)
-        #torch_save(model.state_dict(), args.checkpoint)
+        torch_save(model.state_dict(), args.checkpoint)
     if args.digital: #and not args.load:
         print("default gpt-2 with finetuning")
         train(model,train_set,optimizer)
