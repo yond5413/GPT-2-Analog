@@ -132,7 +132,7 @@ def tldr_inference(ARGS,model, tldr, eval_data, writer, max_inference_time=1e6, 
 
         return micro_f1,macro_f1,weighted_f1,em
 
-    def write_metrics( micro_f1,macro_f1,weighted_f1,em, t_inference):
+    def write_metrics(micro_f1,macro_f1,weighted_f1,em, t_inference):
         # Add information to tensorboard
         writer.add_scalar("val/micro_f1", micro_f1, t_inference)
         writer.add_scalar("val/macro_f1", macro_f1, t_inference)

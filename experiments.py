@@ -87,7 +87,7 @@ if args.wandb:
                     } 
     }
     
-    SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project='GPT2-analog')#"gpt2-weight-noise-experiment")
+    SWEEP_ID = wandb.sweep(sweep=SWEEP_CONFIG, project='gpt2-noise-param-tuning')#'GPT2-analog')#"gpt2-weight-noise-experiment")
 #############################
 def train(model,train,optimizer,epochs = 3):
     categories =['Sponsor', 'Big Tech & Startups', 'Science and Futuristic Technology',
@@ -142,12 +142,12 @@ def make_writer():
     log_dir = "logs/fit/" + args.run_name+f'with_noise_{args.noise}_ideal:{args.ideal}' 
     writer = SummaryWriter(log_dir=log_dir)
     #wandb.tensorboard.patch(root_logdir=log_dir,save=True)
-    return writer,log_dir
+    return writer#,log_dir
 
 def main():
     if wandb:
-        writer,log_dir = make_writer()
-        wandb.tensorboard.patch(root_logdir=log_dir,save=True)
+        #writer,log_dir = make_writer()
+        #wandb.tensorboard.patch(root_logdir=log_dir,save=True)
         wandb.init()#sync_tensorboard=False)
         
         #print(wandb.config.modifier_noise)
@@ -163,7 +163,7 @@ def main():
     model = get_model(args)#,num_classes)
     optimizer = create_optimizer(model,args.learning_rate)
    
-    #writer = make_writer()
+    writer = make_writer()
    
     if args.load:
         print(f"Loading model from '{args.checkpoint}'.")
