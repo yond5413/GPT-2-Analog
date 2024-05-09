@@ -146,7 +146,7 @@ def make_writer():
 
 def main():
     if wandb:
-        wandb.init()
+        wandb.init(sync_tensorboard=False)
         print(wandb.config)
         #print(wandb.config.modifier_noise)
         args.digital = wandb.config.digital
