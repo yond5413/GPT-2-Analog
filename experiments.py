@@ -82,7 +82,7 @@ if args.wandb:
         "metric": {"goal": "maximize", "name": "exact_match"},
     "parameters": {"modifier_noise": {"values": [0, 0.05, 0.1, 0.2]},
                   "digital":{"values":[True,False]},
-                    "load":{"values":[False,True]},
+                    #"load":{"values":[False,True]},
                     "ideal":{"values":[False,True]}
                     } 
     }
@@ -147,6 +147,7 @@ def make_writer():
 def main():
     if wandb:
         writer,log_dir = make_writer()
+        wandb.tensorboard.patch(root_logdir=log_dir,save=True)
         wandb.init()#sync_tensorboard=False)
         
         #print(wandb.config.modifier_noise)
