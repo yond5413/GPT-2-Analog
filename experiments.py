@@ -146,7 +146,7 @@ def make_writer():
 def main():
     if wandb:
         wandb.init()
-        #print(wandb.config)
+        print(wandb.config)
         #print(wandb.config.modifier_noise)
         args.digital = wandb.config.digital
         args.load = wandb.config.load
