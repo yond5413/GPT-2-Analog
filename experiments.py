@@ -141,7 +141,7 @@ def make_writer():
     f'with_noise_{args.noise}' 
     log_dir = "logs/fit/" + args.run_name+f'with_noise_{args.noise}_ideal:{args.ideal}' 
     writer = SummaryWriter(log_dir=log_dir)
-    wandb.tensorboard.patch(root_logdir=log_dir)
+    wandb.tensorboard.patch(root_logdir=log_dir,save=True)
     return writer
 
 def main():
