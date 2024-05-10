@@ -33,4 +33,5 @@ Alongside this here are some of my best result from the evaluation metrics after
 I believe adjusting the optimizer when running in the digital mode will fix the non-ideal RPU conifg.
 
 ![ideal](results/ideal_results.png)
+Here we have the non-ideal results with different noise values
 ![analog-gpt](results/non_ideal_results.png)
