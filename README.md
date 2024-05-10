@@ -26,7 +26,7 @@ had working on this I ended up only using the TLDR dataset, but I believe the re
 
 ### Results: ###
 Herre we can see the layers of the GPT-2 prior to converting and also after.
-![base-gpt](results\gpt-2_defaults.png)
+![base-gpt](results/gpt-2_defaults.png)
 ![analog-gpt](results\gpt-2_analog_wrapping.png)
 
 Alongside this here are some of my best result from the evaluation metrics after finetuning for 3 epochs
