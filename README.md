@@ -22,7 +22,7 @@ across various datasets. The two most notable are SQUAD and RACE for LLM
 benchmarks. I also choose TLDR_News as the dataset seemed like a good fit for
 the task. Essentially the goal was to finetune gpt-2 on these datasets that 
 are centered around NLU(Natural Language Understanding). Due to technical issues I 
-had working on this I ended up only using the TLDR dataset, but I believe the results are still not worthy.
+had working on this I ended up only using the TLDR dataset, but I believe the results are still note worthy.
 
 ### Results: ###
 Herre we can see the layers of the GPT-2 prior to converting and also after.
